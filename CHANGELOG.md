@@ -1,27 +1,13 @@
-# Changes since v21.03
+# Changes since 2021-01-30
 
 ## Changes in Analysis
 
-- [#5258](https://github.com/AliceO2Group/AliceO2/pull/5258) 2021-01-22: Analysis/Task/PWGDQ: remove unnecessary macro by [@dsekihat](https://github.com/dsekihat)
-- [#5260](https://github.com/AliceO2Group/AliceO2/pull/5260) 2021-01-22: PID: Remove exp values from tiny PID tables by [@njacazio](https://github.com/njacazio)
-- [#5255](https://github.com/AliceO2Group/AliceO2/pull/5255) 2021-01-22: adding collision selections by [@nzardosh](https://github.com/nzardosh)
-- [#5270](https://github.com/AliceO2Group/AliceO2/pull/5270) 2021-01-23: Revert "Add full table writing tasks for D0 and Lc (#4910)" by [@ginnocen](https://github.com/ginnocen)
-- [#5265](https://github.com/AliceO2Group/AliceO2/pull/5265) 2021-01-24: PWGHF: Little fix of the J/ψ → e+ e- code. by [@vkucera](https://github.com/vkucera)
-- [#5275](https://github.com/AliceO2Group/AliceO2/pull/5275) 2021-01-25: updating nuclei task for skimming by [@akalweit](https://github.com/akalweit)
-- [#5288](https://github.com/AliceO2Group/AliceO2/pull/5288) 2021-01-26: PWGHF: Update selection on Dplus flag by [@fcatalan92](https://github.com/fcatalan92)
-- [#5299](https://github.com/AliceO2Group/AliceO2/pull/5299) 2021-01-26: removing TPerfStats by [@jgrosseo](https://github.com/jgrosseo)
-- [#5313](https://github.com/AliceO2Group/AliceO2/pull/5313) 2021-01-27: DPL / DPL Analysis: Introduce LabeledArray as an option for Variant by [@aalkin](https://github.com/aalkin)
-- [#5266](https://github.com/AliceO2Group/AliceO2/pull/5266) 2021-01-27: DPL Analysis: make HistogramRegistry support StepTHn by [@mario-krueger](https://github.com/mario-krueger)
-- [#5277](https://github.com/AliceO2Group/AliceO2/pull/5277) 2021-01-27: PWGHF: Add simple task dedicated to efficiency and one for QA by [@njacazio](https://github.com/njacazio)
-- [#5368](https://github.com/AliceO2Group/AliceO2/pull/5368) 2021-02-03: Splitting IO and wait time in metrics by [@jgrosseo](https://github.com/jgrosseo)
 - [#5390](https://github.com/AliceO2Group/AliceO2/pull/5390) 2021-02-08: DPL: fix for sending configuration with spaces by [@aalkin](https://github.com/aalkin)
 - [#5393](https://github.com/AliceO2Group/AliceO2/pull/5393) 2021-02-10: PWGHF: Change the eta cut with the Y cut in the tasks by [@DelloStritto](https://github.com/DelloStritto)
 - [#5420](https://github.com/AliceO2Group/AliceO2/pull/5420) 2021-02-11: Apply git clang-format to Analysis. by [@vkucera](https://github.com/vkucera)
-- [#5358](https://github.com/AliceO2Group/AliceO2/pull/5358) 2021-02-11: PWGHF: rework b+ task template with grouping by [@aalkin](https://github.com/aalkin)
 - [#5421](https://github.com/AliceO2Group/AliceO2/pull/5421) 2021-02-11: add (DCA,Pt,Mass) histogram to analyser - switch to histogram registry by [@aimeric-landou](https://github.com/aimeric-landou)
 ## Changes in Common
 
-- [#5280](https://github.com/AliceO2Group/AliceO2/pull/5280) 2021-01-25: Use global track indices for cross-detector matches by [@shahor02](https://github.com/shahor02)
 - [#5371](https://github.com/AliceO2Group/AliceO2/pull/5371) 2021-02-03: DPL: send error count in a delayed manner by [@ktf](https://github.com/ktf)
 - [#5378](https://github.com/AliceO2Group/AliceO2/pull/5378) 2021-02-04: Fix: further cleanup of redundant labels by [@shahor02](https://github.com/shahor02)
 - [#5383](https://github.com/AliceO2Group/AliceO2/pull/5383) 2021-02-06: [ITS vertexer] Fix compilation with ITS debug by [@mconcas](https://github.com/mconcas)
@@ -32,14 +18,7 @@
 - [#5425](https://github.com/AliceO2Group/AliceO2/pull/5425) 2021-02-11: GPU: Add SMatrixGPU and Fwd decls by [@mconcas](https://github.com/mconcas)
 ## Changes in DataFormats
 
-- [#5230](https://github.com/AliceO2Group/AliceO2/pull/5230) 2021-01-22: Pileup and calibration DA for PHOS and CPV by [@peressounko](https://github.com/peressounko)
-- [#5250](https://github.com/AliceO2Group/AliceO2/pull/5250) 2021-01-22: Raw2Digits and Trigger by [@mbroz84](https://github.com/mbroz84)
-- [#5267](https://github.com/AliceO2Group/AliceO2/pull/5267) 2021-01-23: Fix in indexing for Vertex-Track matching by [@shahor02](https://github.com/shahor02)
-- [#5286](https://github.com/AliceO2Group/AliceO2/pull/5286) 2021-01-25: Fix daughter labels when running parallel merger by [@preghenella](https://github.com/preghenella)
-- [#5281](https://github.com/AliceO2Group/AliceO2/pull/5281) 2021-01-25: Fix: increment MCEventHeader class version by [@shahor02](https://github.com/shahor02)
-- [#5280](https://github.com/AliceO2Group/AliceO2/pull/5280) 2021-01-25: Use global track indices for cross-detector matches by [@shahor02](https://github.com/shahor02)
 - [#5376](https://github.com/AliceO2Group/AliceO2/pull/5376) 2021-02-03: Fix: ensure exact target X assignment in track propagation by [@shahor02](https://github.com/shahor02)
-- [#5366](https://github.com/AliceO2Group/AliceO2/pull/5366) 2021-02-03: Fixes in MCCompLabel, cleanup of redundant labels in matching by [@shahor02](https://github.com/shahor02)
 - [#5378](https://github.com/AliceO2Group/AliceO2/pull/5378) 2021-02-04: Fix: further cleanup of redundant labels by [@shahor02](https://github.com/shahor02)
 - [#5383](https://github.com/AliceO2Group/AliceO2/pull/5383) 2021-02-06: [ITS vertexer] Fix compilation with ITS debug by [@mconcas](https://github.com/mconcas)
 - [#5397](https://github.com/AliceO2Group/AliceO2/pull/5397) 2021-02-06: fix: missing reset in its CompressedClusters by [@shahor02](https://github.com/shahor02)
@@ -49,27 +28,8 @@
 - [#5424](https://github.com/AliceO2Group/AliceO2/pull/5424) 2021-02-11: [O2-2018] Changes to allow usage of either v2 or v3 of Microsoft GSL. by [@aphecetche](https://github.com/aphecetche)
 ## Changes in Detectors
 
-- [#5230](https://github.com/AliceO2Group/AliceO2/pull/5230) 2021-01-22: Pileup and calibration DA for PHOS and CPV by [@peressounko](https://github.com/peressounko)
-- [#5250](https://github.com/AliceO2Group/AliceO2/pull/5250) 2021-01-22: Raw2Digits and Trigger by [@mbroz84](https://github.com/mbroz84)
-- [#5269](https://github.com/AliceO2Group/AliceO2/pull/5269) 2021-01-23: Create TPC output tracks directly in O2 format on the GPU and write directly to SHM buffer by [@davidrohr](https://github.com/davidrohr)
-- [#5271](https://github.com/AliceO2Group/AliceO2/pull/5271) 2021-01-23: Fix codechecker violations by [@davidrohr](https://github.com/davidrohr)
-- [#5267](https://github.com/AliceO2Group/AliceO2/pull/5267) 2021-01-23: Fix in indexing for Vertex-Track matching by [@shahor02](https://github.com/shahor02)
-- [#5268](https://github.com/AliceO2Group/AliceO2/pull/5268) 2021-01-23: Fix: default TPC reco output names propagated to dependent code by [@shahor02](https://github.com/shahor02)
-- [#5262](https://github.com/AliceO2Group/AliceO2/pull/5262) 2021-01-23: adding macro to create space charge density maps from simulations by [@matthias-kleiner](https://github.com/matthias-kleiner)
-- [#5256](https://github.com/AliceO2Group/AliceO2/pull/5256) 2021-01-23: file reader for TPC Tracks and Clusters (+ MC info) by [@tklemenz](https://github.com/tklemenz)
-- [#5278](https://github.com/AliceO2Group/AliceO2/pull/5278) 2021-01-25: Cosmic tracking mode added for ITS by [@shahor02](https://github.com/shahor02)
-- [#5272](https://github.com/AliceO2Group/AliceO2/pull/5272) 2021-01-25: Fix codechecker warnings by [@mconcas](https://github.com/mconcas)
-- [#5285](https://github.com/AliceO2Group/AliceO2/pull/5285) 2021-01-25: Fixes for TPC buffer alignment / 0-size buffers by [@davidrohr](https://github.com/davidrohr)
-- [#5276](https://github.com/AliceO2Group/AliceO2/pull/5276) 2021-01-25: Minor improvements by [@davidrohr](https://github.com/davidrohr)
-- [#5280](https://github.com/AliceO2Group/AliceO2/pull/5280) 2021-01-25: Use global track indices for cross-detector matches by [@shahor02](https://github.com/shahor02)
-- [#5279](https://github.com/AliceO2Group/AliceO2/pull/5279) 2021-01-26: CPV geometry fix, run3 raw format. fix O2-1991 by [@peressounko](https://github.com/peressounko)
-- [#5249](https://github.com/AliceO2Group/AliceO2/pull/5249) 2021-01-26: TPCClusterFinder: Improve performance of noisy pad filter on CPU. by [@fweig](https://github.com/fweig)
-- [#5320](https://github.com/AliceO2Group/AliceO2/pull/5320) 2021-01-27: Add option to create an o2 propagator instance uninitialized to be used with external matLut / gpuFieldMap by [@davidrohr](https://github.com/davidrohr)
-- [#5302](https://github.com/AliceO2Group/AliceO2/pull/5302) 2021-01-27: Remove std::memcpy while processing data in compressor task by [@preghenella](https://github.com/preghenella)
-- [#5364](https://github.com/AliceO2Group/AliceO2/pull/5364) 2021-02-02: Templatize PrimaryVertexer inputs by [@shahor02](https://github.com/shahor02)
 - [#5375](https://github.com/AliceO2Group/AliceO2/pull/5375) 2021-02-03: Digits labels should be read via ConstMCTruthContainer by [@shahor02](https://github.com/shahor02)
 - [#5376](https://github.com/AliceO2Group/AliceO2/pull/5376) 2021-02-03: Fix: ensure exact target X assignment in track propagation by [@shahor02](https://github.com/shahor02)
-- [#5366](https://github.com/AliceO2Group/AliceO2/pull/5366) 2021-02-03: Fixes in MCCompLabel, cleanup of redundant labels in matching by [@shahor02](https://github.com/shahor02)
 - [#5378](https://github.com/AliceO2Group/AliceO2/pull/5378) 2021-02-04: Fix: further cleanup of redundant labels by [@shahor02](https://github.com/shahor02)
 - [#5381](https://github.com/AliceO2Group/AliceO2/pull/5381) 2021-02-04: Little fix in CheckClusters.C needed after the changes intoduced in PR #4777 by [@iouribelikov](https://github.com/iouribelikov)
 - [#5382](https://github.com/AliceO2Group/AliceO2/pull/5382) 2021-02-04: MFT: fix after the changes intoduced in PR #4777 by [@bovulpes](https://github.com/bovulpes)
@@ -91,7 +51,12 @@
 - [#5416](https://github.com/AliceO2Group/AliceO2/pull/5416) 2021-02-11: [Alice 3] Update TRK readme by [@mconcas](https://github.com/mconcas)
 - [#5424](https://github.com/AliceO2Group/AliceO2/pull/5424) 2021-02-11: [O2-2018] Changes to allow usage of either v2 or v3 of Microsoft GSL. by [@aphecetche](https://github.com/aphecetche)
 - [#5435](https://github.com/AliceO2Group/AliceO2/pull/5435) 2021-02-11: remove obsolete check by [@wiechula](https://github.com/wiechula)
+- [#5442](https://github.com/AliceO2Group/AliceO2/pull/5442) 2021-02-12: Fixes for thread safety of CCDB manager and MW2 CDB tests by [@shahor02](https://github.com/shahor02)
+- [#5456](https://github.com/AliceO2Group/AliceO2/pull/5456) 2021-02-12: Initializing dcs-proxy from CCDB by [@chiarazampolli](https://github.com/chiarazampolli)
+- [#5447](https://github.com/AliceO2Group/AliceO2/pull/5447) 2021-02-12: TPConly-TOF matching improvement by [@noferini](https://github.com/noferini)
+- [#5453](https://github.com/AliceO2Group/AliceO2/pull/5453) 2021-02-12: [EMCAL-650] Split payload per SRU link by [@hahassan7](https://github.com/hahassan7)
 - [#5394](https://github.com/AliceO2Group/AliceO2/pull/5394) 2021-02-12: [MCH] Introduce DCS processor by [@aphecetche](https://github.com/aphecetche)
+- [#5468](https://github.com/AliceO2Group/AliceO2/pull/5468) 2021-02-13: Remove ApplyCarryOverToLastPage in EMC mc->raw, use const TrailerSize by [@shahor02](https://github.com/shahor02)
 ## Changes in EventVisualisation
 
 - [#5424](https://github.com/AliceO2Group/AliceO2/pull/5424) 2021-02-11: [O2-2018] Changes to allow usage of either v2 or v3 of Microsoft GSL. by [@aphecetche](https://github.com/aphecetche)
@@ -100,23 +65,9 @@
 - [#5443](https://github.com/AliceO2Group/AliceO2/pull/5443) 2021-02-12: Added macro to read event info from a Pythia8 heavy-ion simulation header by [@preghenella](https://github.com/preghenella)
 ## Changes in Framework
 
-- [#5254](https://github.com/AliceO2Group/AliceO2/pull/5254) 2021-01-22: DPL: speed up single channel output proxy by [@ktf](https://github.com/ktf)
-- [#5236](https://github.com/AliceO2Group/AliceO2/pull/5236) 2021-01-25: DPL Analysis: consolidated Variant conversions by [@aalkin](https://github.com/aalkin)
-- [#5282](https://github.com/AliceO2Group/AliceO2/pull/5282) 2021-01-25: DPL: refactor how we process control messages by [@ktf](https://github.com/ktf)
-- [#5293](https://github.com/AliceO2Group/AliceO2/pull/5293) 2021-01-26: DPL: Adds Variant JSON helpers by [@aalkin](https://github.com/aalkin)
-- [#5301](https://github.com/AliceO2Group/AliceO2/pull/5301) 2021-01-26: DPL: improve WebSockets support by [@ktf](https://github.com/ktf)
-- [#5283](https://github.com/AliceO2Group/AliceO2/pull/5283) 2021-01-26: DPL: introduce a WebSocketHandler by [@ktf](https://github.com/ktf)
-- [#5294](https://github.com/AliceO2Group/AliceO2/pull/5294) 2021-01-26: DPL: use pid_t to refer to pids by [@ktf](https://github.com/ktf)
-- [#5299](https://github.com/AliceO2Group/AliceO2/pull/5299) 2021-01-26: removing TPerfStats by [@jgrosseo](https://github.com/jgrosseo)
-- [#5313](https://github.com/AliceO2Group/AliceO2/pull/5313) 2021-01-27: DPL / DPL Analysis: Introduce LabeledArray as an option for Variant by [@aalkin](https://github.com/aalkin)
-- [#5266](https://github.com/AliceO2Group/AliceO2/pull/5266) 2021-01-27: DPL Analysis: make HistogramRegistry support StepTHn by [@mario-krueger](https://github.com/mario-krueger)
-- [#5321](https://github.com/AliceO2Group/AliceO2/pull/5321) 2021-01-27: DPL: Fix labeled array exception by [@aalkin](https://github.com/aalkin)
-- [#5312](https://github.com/AliceO2Group/AliceO2/pull/5312) 2021-01-27: DPL: include what you use by [@ktf](https://github.com/ktf)
-- [#5310](https://github.com/AliceO2Group/AliceO2/pull/5310) 2021-01-27: Drop obsolete analysis example by [@ktf](https://github.com/ktf)
 - [#5373](https://github.com/AliceO2Group/AliceO2/pull/5373) 2021-02-03: DPL: enable exception / segmentation fault backtrace by default by [@ktf](https://github.com/ktf)
 - [#5372](https://github.com/AliceO2Group/AliceO2/pull/5372) 2021-02-03: DPL: lower severity for debug message by [@ktf](https://github.com/ktf)
 - [#5371](https://github.com/AliceO2Group/AliceO2/pull/5371) 2021-02-03: DPL: send error count in a delayed manner by [@ktf](https://github.com/ktf)
-- [#5368](https://github.com/AliceO2Group/AliceO2/pull/5368) 2021-02-03: Splitting IO and wait time in metrics by [@jgrosseo](https://github.com/jgrosseo)
 - [#5380](https://github.com/AliceO2Group/AliceO2/pull/5380) 2021-02-04: CCDB log improvement + DPL summary of most severe error by [@jgrosseo](https://github.com/jgrosseo)
 - [#5389](https://github.com/AliceO2Group/AliceO2/pull/5389) 2021-02-05: DPL: do not open a websocket for devices by [@ktf](https://github.com/ktf)
 - [#5387](https://github.com/AliceO2Group/AliceO2/pull/5387) 2021-02-05: DPL: improve reliability of --driver-client-backend ws:// by [@ktf](https://github.com/ktf)
@@ -128,20 +79,15 @@
 - [#5449](https://github.com/AliceO2Group/AliceO2/pull/5449) 2021-02-11: DPL: make --fairmq-ipc-prefix homogeneous by [@ktf](https://github.com/ktf)
 - [#5417](https://github.com/AliceO2Group/AliceO2/pull/5417) 2021-02-11: DPL: unify JSON representation of arrays in Variant by [@aalkin](https://github.com/aalkin)
 - [#5424](https://github.com/AliceO2Group/AliceO2/pull/5424) 2021-02-11: [O2-2018] Changes to allow usage of either v2 or v3 of Microsoft GSL. by [@aphecetche](https://github.com/aphecetche)
+- [#5466](https://github.com/AliceO2Group/AliceO2/pull/5466) 2021-02-13: DPL: fix naming of rcvBufSize, sndBufSize by [@ktf](https://github.com/ktf)
 ## Changes in Generators
 
 - [#5429](https://github.com/AliceO2Group/AliceO2/pull/5429) 2021-02-10: Apply git clang-format to Generators. by [@vkucera](https://github.com/vkucera)
 ## Changes in Steer
 
-- [#5230](https://github.com/AliceO2Group/AliceO2/pull/5230) 2021-01-22: Pileup and calibration DA for PHOS and CPV by [@peressounko](https://github.com/peressounko)
-- [#5250](https://github.com/AliceO2Group/AliceO2/pull/5250) 2021-01-22: Raw2Digits and Trigger by [@mbroz84](https://github.com/mbroz84)
 - [#5426](https://github.com/AliceO2Group/AliceO2/pull/5426) 2021-02-09: [EMCAL-614] Fixing the pileup simulation by [@hahassan7](https://github.com/hahassan7)
 ## Changes in Utilities
 
-- [#5271](https://github.com/AliceO2Group/AliceO2/pull/5271) 2021-01-23: Fix codechecker violations by [@davidrohr](https://github.com/davidrohr)
-- [#5287](https://github.com/AliceO2Group/AliceO2/pull/5287) 2021-01-25: jobutils improvements by [@sawenzel](https://github.com/sawenzel)
-- [#5297](https://github.com/AliceO2Group/AliceO2/pull/5297) 2021-01-26: Add JOBUTILS_JOB_SKIPCREATEDONE option, and do not wipe ctf_dictionar… by [@davidrohr](https://github.com/davidrohr)
-- [#5291](https://github.com/AliceO2Group/AliceO2/pull/5291) 2021-01-26: Hide stderr output of lsof in jobutils by [@davidrohr](https://github.com/davidrohr)
 - [#5398](https://github.com/AliceO2Group/AliceO2/pull/5398) 2021-02-06: Some improvements for running the full system test in the CI (and the first test for the full-system-test-CI) by [@davidrohr](https://github.com/davidrohr)
 - [#5422](https://github.com/AliceO2Group/AliceO2/pull/5422) 2021-02-10: jobutils/taskwrapper: use fairmq-shmmonitor by [@sawenzel](https://github.com/sawenzel)
 - [#5444](https://github.com/AliceO2Group/AliceO2/pull/5444) 2021-02-11: Catch ROOT 'fatal in' / simplify fairmq-shmmonitor usage by [@sawenzel](https://github.com/sawenzel)
