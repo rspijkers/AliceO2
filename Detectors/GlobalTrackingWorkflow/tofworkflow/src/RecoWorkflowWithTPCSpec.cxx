@@ -97,7 +97,7 @@ class TOFDPLRecoWorkflowWithTPCTask
       toflab = std::move(*toflabel);
     }
 
-    auto inputsTPCclusters = o2::tpc::getWorkflowTPCInputEmpryPtr();
+    std::decay_t<decltype(o2::tpc::getWorkflowTPCInput(pc))> inputsTPCclusters;
     if (mDoTPCRefit) {
       mMatcher.setTPCTrackClusIdxInp(pc.inputs().get<gsl::span<o2::tpc::TPCClRefElem>>("trackTPCClRefs"));
       mMatcher.setTPCClustersSharingMap(pc.inputs().get<gsl::span<unsigned char>>("clusTPCshmap"));
@@ -126,8 +126,6 @@ class TOFDPLRecoWorkflowWithTPCTask
     pc.outputs().snapshot(Output{o2::header::gDataOriginTOF, "MATCHINFOS_TPC", 0, Lifetime::Timeframe}, mMatcher.getMatchedTrackVector());
     if (mUseMC) {
       pc.outputs().snapshot(Output{o2::header::gDataOriginTOF, "MCMATCHTOF_TPC", 0, Lifetime::Timeframe}, mMatcher.getMatchedTOFLabelsVector());
-      pc.outputs().snapshot(Output{o2::header::gDataOriginTOF, "MCMATCHTPC_TPC", 0, Lifetime::Timeframe}, mMatcher.getMatchedTPCLabelsVector());
-      pc.outputs().snapshot(Output{o2::header::gDataOriginTOF, "MCMATCHITS_TPC", 0, Lifetime::Timeframe}, mMatcher.getMatchedITSLabelsVector());
     }
     pc.outputs().snapshot(Output{o2::header::gDataOriginTOF, "CALIBDATA_TPC", 0, Lifetime::Timeframe}, mMatcher.getCalibVector());
     mTimer.Stop();
@@ -169,8 +167,6 @@ o2::framework::DataProcessorSpec getTOFRecoWorkflowWithTPCSpec(bool useMC, bool 
 
   if (useMC) {
     outputs.emplace_back(o2::header::gDataOriginTOF, "MCMATCHTOF_TPC", 0, Lifetime::Timeframe);
-    outputs.emplace_back(o2::header::gDataOriginTOF, "MCMATCHTPC_TPC", 0, Lifetime::Timeframe);
-    outputs.emplace_back(o2::header::gDataOriginTOF, "MCMATCHITS_TPC", 0, Lifetime::Timeframe);
   }
   outputs.emplace_back(o2::header::gDataOriginTOF, "CALIBDATA_TPC", 0, Lifetime::Timeframe);
 

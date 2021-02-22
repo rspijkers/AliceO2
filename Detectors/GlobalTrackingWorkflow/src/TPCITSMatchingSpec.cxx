@@ -172,8 +172,7 @@ void TPCITSMatchingDPL::run(ProcessingContext& pc)
 
   pc.outputs().snapshot(Output{"GLO", "TPCITS", 0, Lifetime::Timeframe}, mMatching.getMatchedTracks());
   if (mUseMC) {
-    pc.outputs().snapshot(Output{"GLO", "TPCITS_ITSMC", 0, Lifetime::Timeframe}, mMatching.getMatchedITSLabels());
-    pc.outputs().snapshot(Output{"GLO", "TPCITS_TPCMC", 0, Lifetime::Timeframe}, mMatching.getMatchedTPCLabels());
+    pc.outputs().snapshot(Output{"GLO", "TPCITS_MC", 0, Lifetime::Timeframe}, mMatching.getMatchLabels());
   }
 
   if (mCalibMode) {
@@ -191,7 +190,7 @@ void TPCITSMatchingDPL::endOfStream(EndOfStreamContext& ec)
        mTimer.CpuTime(), mTimer.RealTime(), mTimer.Counter() - 1);
 }
 
-DataProcessorSpec getTPCITSMatchingSpec(bool useFT0, bool calib, bool useMC, const std::vector<int>& tpcClusLanes)
+DataProcessorSpec getTPCITSMatchingSpec(bool useFT0, bool calib, bool useMC)
 {
 
   std::vector<InputSpec> inputs;
@@ -223,8 +222,7 @@ DataProcessorSpec getTPCITSMatchingSpec(bool useFT0, bool calib, bool useMC, con
     inputs.emplace_back("trackTPCMCTR", "TPC", "TRACKSMCLBL", 0, Lifetime::Timeframe);
     inputs.emplace_back("clusITSMCTR", "ITS", "CLUSTERSMCTR", 0, Lifetime::Timeframe);
     //
-    outputs.emplace_back("GLO", "TPCITS_ITSMC", 0, Lifetime::Timeframe);
-    outputs.emplace_back("GLO", "TPCITS_TPCMC", 0, Lifetime::Timeframe);
+    outputs.emplace_back("GLO", "TPCITS_MC", 0, Lifetime::Timeframe);
   }
 
   return DataProcessorSpec{

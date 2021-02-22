@@ -292,7 +292,7 @@ bool GPUChainTracking::ValidateSettings()
       return false;
     }
   }
-  if (!(GetRecoStepsGPU() & GPUDataTypes::RecoStep::TPCCompression) && (ProcessingSettings().tpcCompressionGatherMode == 1 || ProcessingSettings().tpcCompressionGatherMode == 3)) {
+  if ((GetRecoStepsGPU() & GPUDataTypes::RecoStep::TPCCompression) && !(GetRecoStepsGPU() & GPUDataTypes::RecoStep::TPCCompression) && (ProcessingSettings().tpcCompressionGatherMode == 1 || ProcessingSettings().tpcCompressionGatherMode == 3)) {
     GPUError("Invalid tpcCompressionGatherMode for compression on CPU");
     return false;
   }
@@ -405,7 +405,13 @@ int GPUChainTracking::PrepareEvent()
 
 int GPUChainTracking::ForceInitQA()
 {
-  return mQA->InitQA();
+  if (!mQA) {
+    mQA.reset(new GPUQA(this));
+  }
+  if (!mQA->IsInitialized()) {
+    return mQA->InitQA();
+  }
+  return 0;
 }
 
 int GPUChainTracking::Finalize()
