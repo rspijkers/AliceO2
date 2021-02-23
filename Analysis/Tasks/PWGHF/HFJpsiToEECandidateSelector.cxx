@@ -79,9 +79,10 @@ struct HFJpsiToEECandidateSelector {
     if (track.charge() == 0) {
       return false;
     }
-    if (track.tpcNClsFound() == 0) {
-      return false; //is it clusters findable or found - need to check
-    }
+    // no tpc in run5, commented out
+    // if (track.tpcNClsFound() == 0) {
+    //   return false; //is it clusters findable or found - need to check
+    // }
     return true;
   }
 
@@ -189,10 +190,11 @@ struct HFJpsiToEECandidateSelector {
         continue;
       }
 
-      if (selectionPID(trackPos) == 0 || selectionPID(trackNeg) == 0) {
-        hfSelJpsiToEECandidate(0);
-        continue;
-      }
+      // no tpc in run5, commented out
+      // if (selectionPID(trackPos) == 0 || selectionPID(trackNeg) == 0) {
+      //   hfSelJpsiToEECandidate(0);
+      //   continue;
+      // }
 
       hfSelJpsiToEECandidate(1);
     }
