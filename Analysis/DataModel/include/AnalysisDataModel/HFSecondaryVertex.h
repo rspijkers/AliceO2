@@ -432,7 +432,7 @@ auto InvMassXicToPiKP(const T& candidate)
 }
 
 // X → Jpsi π+ π-
-
+// TODO: add pdg code for X (9920443)
 template <typename T>
 auto CtX(const T& candidate)
 {
@@ -502,7 +502,6 @@ DECLARE_SOA_EXTENDED_TABLE_USER(HfCandProng3Ext, HfCandProng3Base, "HFCANDP3EXT"
 
 using HfCandProng3 = HfCandProng3Ext;
 
-// DECLARE_SOA_INDEX_COLUMN_FULL(NeutralProng, neutralProng, int, HfCandProng3, "");
 DECLARE_SOA_INDEX_COLUMN_FULL(Index0, index0, int, HfCandProng2, "_0");
 
 // declare dedicated X candidate table

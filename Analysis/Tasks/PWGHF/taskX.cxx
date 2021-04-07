@@ -52,10 +52,10 @@ struct TaskX {
      {"hDecLenXYErr", "3-prong candidates;decay length xy error (cm);entries", {HistType::kTH1F, {{100, 0., 1.}}}},
      {"hPtCand", "3-prong candidates;candidate #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}}}};
 
-  // Configurable<int> selectionFlagX{"selectionFlagX", 1, "Selection Flag for Jpsi"};
+  // Configurable<int> selectionFlagX{"selectionFlagX", 1, "Selection Flag for X"};
   Configurable<double> cutYCandMax{"cutYCandMax", -1., "max. cand. rapidity"};
 
-  // Filter filterSelectCandidates = (aod::hf_selcandidate_jpsi::isSelJpsiToEE >= selectionFlagJpsi);
+  // Filter filterSelectCandidates = (aod::hf_selcandidate_x::isSelXToJpsiPiPi >= selectionFlagX);
 
   // X candidates are not soa::Filtered, should be added when candidate selector is added
   void process(aod::HfCandX const& candidates)
@@ -102,9 +102,9 @@ struct TaskXMC {
      {"hEtaRecBg", "3-prong candidates (rec. unmatched);#it{#eta};entries", {HistType::kTH1F, {{100, -2., 2.}}}},
      {"hEtaGen", "3-prong candidates (gen. matched);#it{#eta};entries", {HistType::kTH1F, {{100, -2., 2.}}}}}};
 
-  // Configurable<int> d_selectionFlagJpsi{"d_selectionFlagJpsi", 1, "Selection Flag for Jpsi"};
-  Configurable<double> cutEtaCandMax{"cutEtaCandMax", -1., "max. cand. pseudorapidity"};
-  // Filter filterSelectCandidates = (aod::hf_selcandidate_jpsi::isSelJpsiToEE >= d_selectionFlagJpsi);
+  // Configurable<int> selectionFlagX{"selectionFlagX", 1, "Selection Flag for X"};
+  Configurable<double> cutYCandMax{"cutYCandMax", -1., "max. cand. rapidity"};
+  // Filter filterSelectCandidates = (aod::hf_selcandidate_x::isSelXToJpsiPiPi >= selectionFlagX);
 
   void process(soa::Join<aod::HfCandX, aod::HfCandProng3MCRec> const& candidates,
                soa::Join<aod::McParticles, aod::HfCandProng3MCGen> const& particlesMC)
