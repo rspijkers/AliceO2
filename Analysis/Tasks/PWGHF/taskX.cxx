@@ -115,8 +115,7 @@ struct TaskXMC {
       if (!(candidate.hfflag() & 1 << XToJpsiPiPi)) {
         continue;
       }
-      if (cutEtaCandMax >= 0. && std::abs(candidate.eta()) > cutEtaCandMax) {
-        //Printf("MC Rec.: eta rejection: %g", candidate.eta());
+      if (cutYCandMax >= 0. && std::abs(YX(candidate)) > cutYCandMax) {
         continue;
       }
       if (candidate.flagMCMatchRec() == 1 << XToJpsiPiPi) {
@@ -132,11 +131,11 @@ struct TaskXMC {
     // MC gen.
     //Printf("MC Particles: %d", particlesMC.size());
     for (auto& particle : particlesMC) {
-      if (cutEtaCandMax >= 0. && std::abs(particle.eta()) > cutEtaCandMax) {
-        //Printf("MC Gen.: eta rejection: %g", particle.eta());
-        continue;
-      }
       if (particle.flagMCMatchGen() == 1 << XToJpsiPiPi) {
+        if (cutYCandMax >= 0. && std::abs(RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, RecoDecay::getMassPDG(particle.pdgCode()))) > cutYCandMax) {
+          //Printf("MC Gen.: Y rejection: %g", RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, RecoDecay::getMassPDG(particle.pdgCode())));
+          continue;
+        }
         registry.fill(HIST("hPtGen"), particle.pt());
         registry.fill(HIST("hEtaGen"), particle.eta());
       }
