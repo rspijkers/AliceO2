@@ -62,7 +62,7 @@ struct TaskX {
   {
     for (auto& candidate : candidates) {
       // TODO: fix hfflag for xToJpsiPiPi
-      if (!(candidate.hfflag() & 1)) {// << XToJpsiPiPi)) {
+      if (!(candidate.hfflag() & 1)) { // << XToJpsiPiPi)) {
         continue;
       }
       // TODO: add pdgcode 9920443 so we can calculate YX in HFSecondaryVertex
@@ -116,13 +116,13 @@ struct TaskXMC {
     // MC rec.
     //Printf("MC Candidates: %d", candidates.size());
     for (auto& candidate : candidates) {
-      if (!(candidate.hfflag() & 1)) {// << XToJpsiPiPi)) { // TODO: fix hf flag
+      if (!(candidate.hfflag() & 1)) { // << XToJpsiPiPi)) { // TODO: fix hf flag
         continue;
       }
       if (cutYCandMax >= 0. && std::abs(YX(candidate)) > cutYCandMax) {
         continue;
       }
-      if (candidate.flagMCMatchRec() == 1) {// << XToJpsiPiPi) { // TODO: fix hf flag
+      if (candidate.flagMCMatchRec() == 1) { // << XToJpsiPiPi) { // TODO: fix hf flag
         // Get the corresponding MC particle.
         auto indexMother = RecoDecay::getMother(particlesMC, candidate.index1_as<aod::BigTracksMC>().mcParticle_as<soa::Join<aod::McParticles, aod::HfCandXMCGen>>(), 9920443, true);
         auto particleMother = particlesMC.iteratorAt(indexMother);
@@ -139,7 +139,7 @@ struct TaskXMC {
     // MC gen.
     //Printf("MC Particles: %d", particlesMC.size());
     for (auto& particle : particlesMC) {
-      if (particle.flagMCMatchGen() == 1) {// << XToJpsiPiPi) { // TODO: fix hf flag
+      if (particle.flagMCMatchGen() == 1) { // << XToJpsiPiPi) { // TODO: fix hf flag
         // if (cutYCandMax >= 0. && std::abs(RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, RecoDecay::getMassPDG(particle.pdgCode()))) > cutYCandMax) {
         //   Printf("MC Gen.: Y rejection: %g", RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, RecoDecay::getMassPDG(particle.pdgCode())));
         //   continue;
@@ -157,8 +157,8 @@ struct TaskXMC {
         registry.fill(HIST("hEtaGen"), particle.eta());
       }
     } //gen
-  } // process
-};  // struct
+  }   // process
+};    // struct
 
 WorkflowSpec defineDataProcessing(ConfigContext const& cfgc)
 {
