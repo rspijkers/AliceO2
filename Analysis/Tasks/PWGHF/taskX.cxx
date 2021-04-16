@@ -128,7 +128,7 @@ struct TaskXMC {
     // MC rec.
     //Printf("MC Candidates: %d", candidates.size());
     for (auto& candidate : candidates) {
-      if (!(candidate.hfflag() & 1 << XToJpsiPiPi)) {
+      if (!(candidate.hfflag() & 1)) { // << XToJpsiPiPi)) { // TODO: fix hf flag
         continue;
       }
       if (cutYCandMax >= 0. && std::abs(YX(candidate)) > cutYCandMax) {
@@ -170,6 +170,15 @@ struct TaskXMC {
         //   continue;
         // }
         registry.fill(HIST("hPtGen"), particle.pt());
+        float ptProngs[3];
+        int counter = 0;
+        for (int iD = particle.daughter0(); iD <= particle.daughter1(); ++iD) {
+          ptProngs[counter] = particlesMC.iteratorAt(iD).pt();
+          counter++;
+        }
+        registry.fill(HIST("hPtGenProng0"), ptProngs[0]);
+        registry.fill(HIST("hPtGenProng1"), ptProngs[1]);
+        registry.fill(HIST("hPtGenProng2"), ptProngs[2]);
         registry.fill(HIST("hEtaGen"), particle.eta());
 
         // properties of gen matched X(3872), to get a first look at some cuts
