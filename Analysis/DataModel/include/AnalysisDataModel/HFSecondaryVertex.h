@@ -388,7 +388,6 @@ enum DecayType { DPlusToPiKPi = 0,
                  LcToPKPi,
                  DsToPiKK,
                  XicToPKPi,
-                 XToJpsiPiPi,
                  N3ProngDecays }; //always keep N3ProngDecays at the end
 
 // functions for specific particles
@@ -484,23 +483,24 @@ auto InvMassXicToPiKP(const T& candidate)
 }
 
 // X → Jpsi π+ π-
-// TODO: add pdg code for X (9920443)
+// TODO: add pdg code for X (9920443), temporarily hardcode mass here:
+float massX = 3.872; // replace this with: "RecoDecay::getMassPDG(9920443)" when pdg is added
 template <typename T>
 auto CtX(const T& candidate)
 {
-  return candidate.ct(RecoDecay::getMassPDG(9920443));
+  return candidate.ct(massX);
 }
 
 template <typename T>
 auto YX(const T& candidate)
 {
-  return candidate.y(RecoDecay::getMassPDG(9920443));
+  return candidate.y(massX);
 }
 
 template <typename T>
 auto EX(const T& candidate)
 {
-  return candidate.e(RecoDecay::getMassPDG(9920443));
+  return candidate.e(massX);
 }
 template <typename T>
 auto InvMassXToJpsiPiPi(const T& candidate)
@@ -554,7 +554,30 @@ DECLARE_SOA_EXTENDED_TABLE_USER(HfCandProng3Ext, HfCandProng3Base, "HFCANDP3EXT"
 
 using HfCandProng3 = HfCandProng3Ext;
 
-DECLARE_SOA_INDEX_COLUMN_FULL(Index0, index0, int, HfCandProng2, "_0");
+// table with results of reconstruction level MC matching
+DECLARE_SOA_TABLE(HfCandProng3MCRec, "AOD", "HFCANDP3MCREC",
+                  hf_cand_prong3::FlagMCMatchRec,
+                  hf_cand_prong3::OriginMCRec,
+                  hf_cand_prong3::FlagMCDecayChanRec);
+
+// table with results of generator level MC matching
+DECLARE_SOA_TABLE(HfCandProng3MCGen, "AOD", "HFCANDP3MCGEN",
+                  hf_cand_prong3::FlagMCMatchGen,
+                  hf_cand_prong3::OriginMCGen,
+                  hf_cand_prong3::FlagMCDecayChanGen);
+
+// specific X candidate properties
+namespace hf_cand_x
+{
+DECLARE_SOA_INDEX_COLUMN_FULL(Index0, index0, int, HfCandProng2, "_0"); // Jpsi index
+// MC matching result:
+DECLARE_SOA_COLUMN(FlagMCMatchRec, flagMCMatchRec, int8_t);         // reconstruction level
+DECLARE_SOA_COLUMN(FlagMCMatchGen, flagMCMatchGen, int8_t);         // generator level
+DECLARE_SOA_COLUMN(OriginMCRec, originMCRec, int8_t);               // particle origin, reconstruction level
+DECLARE_SOA_COLUMN(OriginMCGen, originMCGen, int8_t);               // particle origin, generator level
+DECLARE_SOA_COLUMN(FlagMCDecayChanRec, flagMCDecayChanRec, int8_t); // resonant decay channel flag, reconstruction level
+DECLARE_SOA_COLUMN(FlagMCDecayChanGen, flagMCDecayChanGen, int8_t); // resonant decay channel flag, generator level
+} // namespace hf_cand_x
 
 // declare dedicated X candidate table
 DECLARE_SOA_TABLE(HfCandXBase, "AOD", "HFCANDXBASE",
@@ -566,7 +589,7 @@ DECLARE_SOA_TABLE(HfCandXBase, "AOD", "HFCANDXBASE",
                   hf_cand::PxProng2, hf_cand::PyProng2, hf_cand::PzProng2,
                   hf_cand::ImpactParameter0, hf_cand::ImpactParameter1, hf_cand::ImpactParameter2,
                   hf_cand::ErrorImpactParameter0, hf_cand::ErrorImpactParameter1, hf_cand::ErrorImpactParameter2,
-                  Index0Id, hf_track_index::Index1Id, hf_track_index::Index2Id, // note the difference between Jpsi and pion indices
+                  hf_cand_x::Index0Id, hf_track_index::Index1Id, hf_track_index::Index2Id, // note the difference between Jpsi and pion indices
                   hf_track_index::HFflag,
                   /* dynamic columns */
                   hf_cand_prong3::M<hf_cand::PxProng0, hf_cand::PyProng0, hf_cand::PzProng0, hf_cand::PxProng1, hf_cand::PyProng1, hf_cand::PzProng1, hf_cand::PxProng2, hf_cand::PyProng2, hf_cand::PzProng2>,
@@ -599,16 +622,16 @@ DECLARE_SOA_EXTENDED_TABLE_USER(HfCandXExt, HfCandXBase, "HFCANDXEXT",
 using HfCandX = HfCandXExt;
 
 // table with results of reconstruction level MC matching
-DECLARE_SOA_TABLE(HfCandProng3MCRec, "AOD", "HFCANDP3MCREC", //!
-                  hf_cand_prong3::FlagMCMatchRec,
-                  hf_cand_prong3::OriginMCRec,
-                  hf_cand_prong3::FlagMCDecayChanRec);
+DECLARE_SOA_TABLE(HfCandXMCRec, "AOD", "HFCANDXMCREC",
+                  hf_cand_x::FlagMCMatchRec,
+                  hf_cand_x::OriginMCRec,
+                  hf_cand_x::FlagMCDecayChanRec);
 
 // table with results of generator level MC matching
-DECLARE_SOA_TABLE(HfCandProng3MCGen, "AOD", "HFCANDP3MCGEN", //!
-                  hf_cand_prong3::FlagMCMatchGen,
-                  hf_cand_prong3::OriginMCGen,
-                  hf_cand_prong3::FlagMCDecayChanGen);
+DECLARE_SOA_TABLE(HfCandXMCGen, "AOD", "HFCANDXMCGEN",
+                  hf_cand_x::FlagMCMatchGen,
+                  hf_cand_x::OriginMCGen,
+                  hf_cand_x::FlagMCDecayChanGen);
 
 } // namespace o2::aod
 

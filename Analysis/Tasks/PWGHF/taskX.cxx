@@ -63,13 +63,13 @@ struct TaskX {
   {
     for (auto& candidate : candidates) {
       // TODO: fix hfflag for xToJpsiPiPi
-      // if (!(candidate.hfflag() & 1 << XToJpsiPiPi)) {
-      //   continue;
-      // }
+      if (!(candidate.hfflag() & 1)) { // << XToJpsiPiPi)) {
+        continue;
+      }
       // TODO: add pdgcode 9920443 so we can calculate YX in HFSecondaryVertex
-      // if (cutYCandMax >= 0. && std::abs(YX(candidate)) > cutYCandMax) {
-      //   continue;
-      // }
+      if (cutYCandMax >= 0. && std::abs(YX(candidate)) > cutYCandMax) {
+        continue;
+      }
 
       registry.fill(HIST("hMass"), InvMassXToJpsiPiPi(candidate));
       registry.fill(HIST("hPtCand"), candidate.pt());
@@ -97,6 +97,10 @@ struct TaskXMC {
     {{"hPtRecSig", "3-prong candidates (rec. matched);#it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
      {"hPtRecBg", "3-prong candidates (rec. unmatched);#it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
      {"hPtGen", "3-prong candidates (gen. matched);#it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
+     {"hPtGenProng0", "3-prong candidates (gen. matched);prong 0 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
+     {"hPtGenProng1", "3-prong candidates (gen. matched);prong 1 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
+     {"hPtGenProng2", "3-prong candidates (gen. matched);prong 2 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
+     {"hPtGenSig", "3-prong candidates (rec. matched);#it{p}_{T}^{gen.} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
      {"hCPARecSig", "3-prong candidates (rec. matched);cosine of pointing angle;entries", {HistType::kTH1F, {{110, -1.1, 1.1}}}},
      {"hCPARecBg", "3-prong candidates (rec. unmatched);cosine of pointing angle;entries", {HistType::kTH1F, {{110, -1.1, 1.1}}}},
      {"hEtaRecSig", "3-prong candidates (rec. matched);#it{#eta};entries", {HistType::kTH1F, {{100, -2., 2.}}}},
@@ -107,19 +111,23 @@ struct TaskXMC {
   Configurable<double> cutYCandMax{"cutYCandMax", -1., "max. cand. rapidity"};
   // Filter filterSelectCandidates = (aod::hf_selcandidate_x::isSelXToJpsiPiPi >= selectionFlagX);
 
-  void process(soa::Join<aod::HfCandX, aod::HfCandProng3MCRec> const& candidates,
-               soa::Join<aod::McParticles, aod::HfCandProng3MCGen> const& particlesMC)
+  void process(soa::Join<aod::HfCandX, aod::HfCandXMCRec> const& candidates,
+               soa::Join<aod::McParticles, aod::HfCandXMCGen> const& particlesMC)
   {
     // MC rec.
     //Printf("MC Candidates: %d", candidates.size());
     for (auto& candidate : candidates) {
-      if (!(candidate.hfflag() & 1 << XToJpsiPiPi)) {
+      if (!(candidate.hfflag() & 1)) { // << XToJpsiPiPi)) { // TODO: fix hf flag
         continue;
       }
       if (cutYCandMax >= 0. && std::abs(YX(candidate)) > cutYCandMax) {
         continue;
       }
-      if (candidate.flagMCMatchRec() == 1 << XToJpsiPiPi) {
+      if (candidate.flagMCMatchRec() == 1) { // << XToJpsiPiPi) { // TODO: fix hf flag
+        // Get the corresponding MC particle.
+        auto indexMother = RecoDecay::getMother(particlesMC, candidate.index1_as<aod::BigTracksMC>().mcParticle_as<soa::Join<aod::McParticles, aod::HfCandXMCGen>>(), 9920443, true);
+        auto particleMother = particlesMC.iteratorAt(indexMother);
+        registry.fill(HIST("hPtGenSig"), particleMother.pt());
         registry.fill(HIST("hPtRecSig"), candidate.pt());
         registry.fill(HIST("hCPARecSig"), candidate.cpa());
         registry.fill(HIST("hEtaRecSig"), candidate.eta());
@@ -128,21 +136,30 @@ struct TaskXMC {
         registry.fill(HIST("hCPARecBg"), candidate.cpa());
         registry.fill(HIST("hEtaRecBg"), candidate.eta());
       }
-    }
+    } // rec
     // MC gen.
     //Printf("MC Particles: %d", particlesMC.size());
     for (auto& particle : particlesMC) {
-      if (particle.flagMCMatchGen() == 1 << XToJpsiPiPi) {
-        if (cutYCandMax >= 0. && std::abs(RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, RecoDecay::getMassPDG(particle.pdgCode()))) > cutYCandMax) {
-          //Printf("MC Gen.: Y rejection: %g", RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, RecoDecay::getMassPDG(particle.pdgCode())));
-          continue;
-        }
+      if (particle.flagMCMatchGen() == 1) { // << XToJpsiPiPi) { // TODO: fix hf flag
+        // if (cutYCandMax >= 0. && std::abs(RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, RecoDecay::getMassPDG(particle.pdgCode()))) > cutYCandMax) {
+        //   Printf("MC Gen.: Y rejection: %g", RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, RecoDecay::getMassPDG(particle.pdgCode())));
+        //   continue;
+        // }
         registry.fill(HIST("hPtGen"), particle.pt());
+        float ptProngs[3];
+        int counter = 0;
+        for (int iD = particle.daughter0(); iD <= particle.daughter1(); ++iD) {
+          ptProngs[counter] = particlesMC.iteratorAt(iD).pt();
+          counter++;
+        }
+        registry.fill(HIST("hPtGenProng0"), ptProngs[0]);
+        registry.fill(HIST("hPtGenProng1"), ptProngs[1]);
+        registry.fill(HIST("hPtGenProng2"), ptProngs[2]);
         registry.fill(HIST("hEtaGen"), particle.eta());
       }
-    }
-  } // process
-};  // struct
+    } //gen
+  }   // process
+};    // struct
 
 WorkflowSpec defineDataProcessing(ConfigContext const& cfgc)
 {
