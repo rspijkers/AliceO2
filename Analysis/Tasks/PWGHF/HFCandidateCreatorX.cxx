@@ -133,9 +133,9 @@ struct HFCandidateCreatorX {
         if (trackPos.globalIndex() == index0Jpsi) {
           continue;
         }
-        if (trackPos.pt() < 2.) { // temporary min pt check to improve performance
-          continue;
-        }
+        // if (trackPos.pt() < .5) { // temporary min pt check to improve performance
+        //   continue;
+        // }
 
         // loop over pi- candidates
         for (auto& trackNeg : tracks) {
@@ -145,9 +145,9 @@ struct HFCandidateCreatorX {
           if (trackNeg.globalIndex() == index1Jpsi) {
             continue;
           }
-          if (trackNeg.pt() < 2.) { // temporary min pt check to improve performance
-            continue;
-          }
+          // if (trackNeg.pt() < .5) { // temporary min pt check to improve performance
+          //   continue;
+          // }
 
           auto trackParVarPos = getTrackParCov(trackPos);
           auto trackParVarNeg = getTrackParCov(trackNeg);
@@ -189,7 +189,7 @@ struct HFCandidateCreatorX {
           auto errorDecayLength = std::sqrt(getRotatedCovMatrixXX(covMatrixPV, phi, theta) + getRotatedCovMatrixXX(covMatrixPCA, phi, theta));
           auto errorDecayLengthXY = std::sqrt(getRotatedCovMatrixXX(covMatrixPV, phi, 0.) + getRotatedCovMatrixXX(covMatrixPCA, phi, 0.));
 
-          int hfFlagTemp = 0; // TODO: get an actual hf flag somehow
+          int hfFlagTemp = 1; // TODO: do something with bitmaps? this is set to 1 for now, since X has only one decay channel implemented
 
           // fill the candidate table for the X here:
           rowCandidateBase(collision.globalIndex(),
@@ -203,7 +203,7 @@ struct HFCandidateCreatorX {
                            impactParameter0.getY(), impactParameter1.getY(), impactParameter2.getY(),
                            std::sqrt(impactParameter0.getSigmaY2()), std::sqrt(impactParameter1.getSigmaY2()), std::sqrt(impactParameter2.getSigmaY2()),
                            jpsiCand.globalIndex(), trackPos.globalIndex(), trackNeg.globalIndex(),
-                           hfFlagTemp); // dont forget the temporary hfflag
+                           hfFlagTemp); // dont forget to implement an "hfflag"
 
           // calculate invariant mass
           auto arrayMomenta = array{pvecJpsi, pvecPos, pvecNeg};
@@ -221,13 +221,13 @@ struct HFCandidateCreatorXExpressions {
   void init(InitContext const&) {}
 };
 
-// TODO: add pdg 9920443 so we can MC match; without this MC matching doesnt work
 /// Performs MC matching.
 struct HFCandidateCreatorXMC {
-  Produces<aod::HfCandProng3MCRec> rowMCMatchRec;
-  Produces<aod::HfCandProng3MCGen> rowMCMatchGen;
+  Produces<aod::HfCandXMCRec> rowMCMatchRec;
+  Produces<aod::HfCandXMCGen> rowMCMatchGen;
 
   void process(aod::HfCandX const& candidates,
+               aod::HfCandProng2,
                aod::BigTracksMC const& tracks,
                aod::McParticles const& particlesMC)
   {
@@ -243,15 +243,17 @@ struct HFCandidateCreatorXMC {
       flag = 0;
       origin = 0;
       channel = 0;
-      auto arrayDaughters = array{candidate.index0_as<aod::BigTracksMC>(),
-                                  candidate.index1_as<aod::BigTracksMC>(),
-                                  candidate.index2_as<aod::BigTracksMC>()};
+      auto jpsiTrack = candidate.index0();
+      auto arrayDaughters = array{candidate.index1_as<aod::BigTracksMC>(),
+                                  candidate.index2_as<aod::BigTracksMC>(),
+                                  jpsiTrack.index0_as<aod::BigTracksMC>(),
+                                  jpsiTrack.index1_as<aod::BigTracksMC>()};
 
       // X → J/ψ π+ π-
       //Printf("Checking X → J/ψ π+ π-");
-      indexRec = RecoDecay::getMatchedMCRec(particlesMC, std::move(arrayDaughters), 9920443, array{443, +kPiPlus, -kPiPlus}, true);
+      indexRec = RecoDecay::getMatchedMCRec(particlesMC, arrayDaughters, 9920443, array{+kPiPlus, -kPiPlus, +kElectron, -kElectron}, true, &sign, 2);
       if (indexRec > -1) {
-        flag = 1 << XToJpsiPiPi;
+        flag = 1; // << XToJpsiPiPi;
       }
 
       // Check whether the particle is non-prompt (from a b quark).
@@ -268,11 +270,14 @@ struct HFCandidateCreatorXMC {
       //Printf("New gen. candidate");
       flag = 0;
       origin = 0;
+      channel = 0;
 
       // X → J/ψ π+ π-
       //Printf("Checking X → J/ψ π+ π-");
+      // TODO: pdg 443 --> kJpsi
       if (RecoDecay::isMatchedMCGen(particlesMC, particle, 9920443, array{443, +kPiPlus, -kPiPlus}, true)) {
-        flag = 1 << XToJpsiPiPi;
+        // TODO: match J/psi --> e+e- ? the J/psi from these X's can in principle decay via some other mode
+        flag = 1; // << XToJpsiPiPi;
       }
 
       // Check whether the particle is non-prompt (from a b quark).
