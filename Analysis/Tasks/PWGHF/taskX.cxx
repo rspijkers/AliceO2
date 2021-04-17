@@ -117,8 +117,6 @@ struct TaskXMC {
      {"hDeclengthRecSig", "3-prong candidates (rec. matched);decay length (cm);entries", {HistType::kTH1F, {{200, 0., 2.}}}},
      {"hDeclengthRecBg", "3-prong candidates (rec. unmatched);decay length (cm);entries", {HistType::kTH1F, {{200, 0., 2.}}}}}};
 
-
-
   // Configurable<int> selectionFlagX{"selectionFlagX", 1, "Selection Flag for X"};
   Configurable<double> cutYCandMax{"cutYCandMax", -1., "max. cand. rapidity"};
   // Filter filterSelectCandidates = (aod::hf_selcandidate_x::isSelXToJpsiPiPi >= selectionFlagX);
