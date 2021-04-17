@@ -90,7 +90,6 @@ struct HFCandidateCreatorX {
     df3.setMinRelChi2Change(d_minrelchi2change);
     df3.setUseAbsDCA(true);
 
-    // FIXME: We get more J/psi candidates than the Jpsi task, why?
     // loop over Jpsi candidates
     for (auto& jpsiCand : jpsiCands) {
       if (!(jpsiCand.hfflag() & 1 << JpsiToEE)) {
@@ -133,9 +132,6 @@ struct HFCandidateCreatorX {
         if (trackPos.globalIndex() == index0Jpsi) {
           continue;
         }
-        // if (trackPos.pt() < .5) { // temporary min pt check to improve performance
-        //   continue;
-        // }
 
         // loop over pi- candidates
         for (auto& trackNeg : tracks) {
@@ -145,13 +141,9 @@ struct HFCandidateCreatorX {
           if (trackNeg.globalIndex() == index1Jpsi) {
             continue;
           }
-          // if (trackNeg.pt() < .5) { // temporary min pt check to improve performance
-          //   continue;
-          // }
 
           auto trackParVarPos = getTrackParCov(trackPos);
           auto trackParVarNeg = getTrackParCov(trackNeg);
-
           array<float, 3> pvecPos;
           array<float, 3> pvecNeg;
 
