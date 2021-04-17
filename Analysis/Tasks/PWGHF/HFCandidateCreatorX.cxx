@@ -276,8 +276,13 @@ struct HFCandidateCreatorXMC {
       //Printf("Checking X → J/ψ π+ π-");
       // TODO: pdg 443 --> kJpsi
       if (RecoDecay::isMatchedMCGen(particlesMC, particle, 9920443, array{443, +kPiPlus, -kPiPlus}, true)) {
-        // TODO: match J/psi --> e+e- ? the J/psi from these X's can in principle decay via some other mode
-        flag = 1; // << XToJpsiPiPi;
+        // Match J/psi --> e+e-
+        std::vector<int> arrDaughter;
+        RecoDecay::getDaughters(particlesMC, particle, &arrDaughter, array{443}, 1);
+        auto jpsiCandMC = particlesMC.iteratorAt(arrDaughter[0]);
+        if (RecoDecay::isMatchedMCGen(particlesMC, jpsiCandMC, 443, array{+kElectron, -kElectron}, true)) {
+          flag = 1; // << XToJpsiPiPi;
+        }
       }
 
       // Check whether the particle is non-prompt (from a b quark).
