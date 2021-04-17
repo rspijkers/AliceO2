@@ -170,6 +170,9 @@ struct TaskXMC {
         //   continue;
         // }
         registry.fill(HIST("hPtGen"), particle.pt());
+        registry.fill(HIST("hEtaGen"), particle.eta());
+
+        // properties of gen matched X(3872), to get a first look at some cuts
         float ptProngs[3];
         int counter = 0;
         for (int iD = particle.daughter0(); iD <= particle.daughter1(); ++iD) {
