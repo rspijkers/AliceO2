@@ -128,7 +128,7 @@ struct TaskXMC {
     // MC rec.
     //Printf("MC Candidates: %d", candidates.size());
     for (auto& candidate : candidates) {
-      if (!(candidate.hfflag() & 1)) { // << XToJpsiPiPi)) { // TODO: fix hf flag
+      if (!(candidate.hfflag() & 1 << XToJpsiPiPi)) {
         continue;
       }
       if (cutYCandMax >= 0. && std::abs(YX(candidate)) > cutYCandMax) {
