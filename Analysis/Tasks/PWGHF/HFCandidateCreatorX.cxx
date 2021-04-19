@@ -27,6 +27,7 @@ using namespace o2::framework;
 using namespace o2::aod::hf_cand;
 using namespace o2::aod::hf_cand_prong2;
 using namespace o2::aod::hf_cand_prong3;
+using namespace o2::aod::hf_cand_x;
 using namespace o2::framework::expressions;
 
 void customize(std::vector<o2::framework::ConfigParamSpec>& workflowOptions)
@@ -245,7 +246,7 @@ struct HFCandidateCreatorXMC {
       //Printf("Checking X → J/ψ π+ π-");
       indexRec = RecoDecay::getMatchedMCRec(particlesMC, arrayDaughters, 9920443, array{+kPiPlus, -kPiPlus, +kElectron, -kElectron}, true, &sign, 2);
       if (indexRec > -1) {
-        flag = 1; // << XToJpsiPiPi;
+        flag = 1 << XToJpsiPiPi;
       }
 
       // Check whether the particle is non-prompt (from a b quark).
@@ -266,14 +267,13 @@ struct HFCandidateCreatorXMC {
 
       // X → J/ψ π+ π-
       //Printf("Checking X → J/ψ π+ π-");
-      // TODO: pdg 443 --> kJpsi
       if (RecoDecay::isMatchedMCGen(particlesMC, particle, 9920443, array{443, +kPiPlus, -kPiPlus}, true)) {
         // Match J/psi --> e+e-
         std::vector<int> arrDaughter;
         RecoDecay::getDaughters(particlesMC, particle, &arrDaughter, array{443}, 1);
         auto jpsiCandMC = particlesMC.iteratorAt(arrDaughter[0]);
         if (RecoDecay::isMatchedMCGen(particlesMC, jpsiCandMC, 443, array{+kElectron, -kElectron}, true)) {
-          flag = 1; // << XToJpsiPiPi;
+          flag = 1 << XToJpsiPiPi;
         }
       }
 
