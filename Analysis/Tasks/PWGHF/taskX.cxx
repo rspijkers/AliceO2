@@ -22,6 +22,7 @@
 using namespace o2;
 using namespace o2::framework;
 using namespace o2::aod::hf_cand_prong3;
+using namespace o2::aod::hf_cand_x;
 using namespace o2::framework::expressions;
 using namespace o2::aod::hf_cand_prong2;
 
@@ -62,11 +63,9 @@ struct TaskX {
   void process(aod::HfCandX const& candidates)
   {
     for (auto& candidate : candidates) {
-      // TODO: fix hfflag for xToJpsiPiPi
-      if (!(candidate.hfflag() & 1)) { // << XToJpsiPiPi)) {
+      if (!(candidate.hfflag() & 1 << XToJpsiPiPi)) {
         continue;
       }
-      // TODO: add pdgcode 9920443 so we can calculate YX in HFSecondaryVertex
       if (cutYCandMax >= 0. && std::abs(YX(candidate)) > cutYCandMax) {
         continue;
       }
@@ -128,14 +127,14 @@ struct TaskXMC {
     // MC rec.
     //Printf("MC Candidates: %d", candidates.size());
     for (auto& candidate : candidates) {
-      if (!(candidate.hfflag() & 1)) { // << XToJpsiPiPi)) { // TODO: fix hf flag
+      if (!(candidate.hfflag() & 1 << XToJpsiPiPi)) {
         continue;
       }
       if (cutYCandMax >= 0. && std::abs(YX(candidate)) > cutYCandMax) {
         continue;
       }
-      if (candidate.flagMCMatchRec() == 1) { // << XToJpsiPiPi) { // TODO: fix hf flag
-        // Get the corresponding MC particle.
+      if (candidate.flagMCMatchRec() == 1 << XToJpsiPiPi) {
+        // Get the corresponding MC particle. // TODO: fix the next 3 lines, gives very strange error
         // auto indexMother = RecoDecay::getMother(particlesMC, candidate.index1_as<aod::BigTracksMC>().mcParticle_as<soa::Join<aod::McParticles, aod::HfCandXMCGen>>(), 9920443, true);
         // auto particleMother = particlesMC.iteratorAt(indexMother);
         // registry.fill(HIST("hPtGenSig"), particleMother.pt());
@@ -163,7 +162,8 @@ struct TaskXMC {
     // MC gen.
     //Printf("MC Particles: %d", particlesMC.size());
     for (auto& particle : particlesMC) {
-      if (particle.flagMCMatchGen() == 1) { // << XToJpsiPiPi) { // TODO: fix hf flag
+      if (particle.flagMCMatchGen() == 1 << XToJpsiPiPi) {
+        // TODO: add X(3872) mass such that we can use the getMassPDG function
         // if (cutYCandMax >= 0. && std::abs(RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, RecoDecay::getMassPDG(particle.pdgCode()))) > cutYCandMax) {
         //   Printf("MC Gen.: Y rejection: %g", RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, RecoDecay::getMassPDG(particle.pdgCode())));
         //   continue;
