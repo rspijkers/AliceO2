@@ -87,7 +87,12 @@ o2_add_dpl_workflow(hf-lc-tok0sp-candidate-selector
                     SOURCES HFLcK0sPCandidateSelector.cxx
                     PUBLIC_LINK_LIBRARIES O2::Framework O2::AnalysisDataModel O2::AnalysisCore O2::DetectorsVertexing O2::AnalysisTasksUtils 
                     COMPONENT_NAME Analysis)
-		  
+
+o2_add_dpl_workflow(hf-x-tojpsipipi-candidate-selector
+                    SOURCES HFXToJpsiPiPiCandidateSelector.cxx
+                    PUBLIC_LINK_LIBRARIES O2::Framework O2::AnalysisDataModel O2::AnalysisCore O2::DetectorsVertexing
+                    COMPONENT_NAME Analysis)
+
 o2_add_dpl_workflow(hf-task-d0
                     SOURCES taskD0.cxx
                     PUBLIC_LINK_LIBRARIES O2::Framework O2::AnalysisDataModel O2::AnalysisCore O2::DetectorsVertexing
