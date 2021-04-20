@@ -54,13 +54,12 @@ struct TaskX {
      {"hDecLenXYErr", "3-prong candidates;decay length xy error (cm);entries", {HistType::kTH1F, {{100, 0., 1.}}}},
      {"hPtCand", "3-prong candidates;candidate #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}}}};
 
-  // Configurable<int> selectionFlagX{"selectionFlagX", 1, "Selection Flag for X"};
+  Configurable<int> selectionFlagX{"selectionFlagX", 1, "Selection Flag for X"};
   Configurable<double> cutYCandMax{"cutYCandMax", -1., "max. cand. rapidity"};
 
-  // Filter filterSelectCandidates = (aod::hf_selcandidate_x::isSelXToJpsiPiPi >= selectionFlagX);
+  Filter filterSelectCandidates = (aod::hf_selcandidate_x::isSelXToJpsiPiPi >= selectionFlagX);
 
-  // X candidates are not soa::Filtered, should be added when candidate selector is added
-  void process(aod::HfCandX const& candidates)
+  void process(soa::Filtered<soa::Join<aod::HfCandX, aod::hfSelXToJpsiPiPiCandidate>> const& candidates)
   {
     for (auto& candidate : candidates) {
       if (!(candidate.hfflag() & 1 << XToJpsiPiPi)) {
@@ -117,13 +116,12 @@ struct TaskXMC {
      {"hDeclengthRecSig", "3-prong candidates (rec. matched);decay length (cm);entries", {HistType::kTH1F, {{200, 0., 2.}}}},
      {"hDeclengthRecBg", "3-prong candidates (rec. unmatched);decay length (cm);entries", {HistType::kTH1F, {{200, 0., 2.}}}}}};
 
-  // Configurable<int> selectionFlagX{"selectionFlagX", 1, "Selection Flag for X"};
+  Configurable<int> selectionFlagX{"selectionFlagX", 1, "Selection Flag for X"};
   Configurable<double> cutYCandMax{"cutYCandMax", -1., "max. cand. rapidity"};
-  // Filter filterSelectCandidates = (aod::hf_selcandidate_x::isSelXToJpsiPiPi >= selectionFlagX);
+  Filter filterSelectCandidates = (aod::hf_selcandidate_x::isSelXToJpsiPiPi >= selectionFlagX);
 
-  void process(soa::Join<aod::HfCandX, aod::HfCandXMCRec> const& candidates,
-               soa::Join<aod::McParticles, aod::HfCandXMCGen> const& particlesMC,
-               aod::BigTracksMC) // aod::BigTracksMC is needed to get corresponding MC particle in MC rec. part
+  void process(soa::Filtered<soa::Join<aod::HfCandX, aod::HFSelXToJpsiPiPiCandidate, aod::HfCandXMCRec>> const& candidates,
+               soa::Join<aod::McParticles, aod::HfCandXMCGen> const& particlesMC, aod::BigTracksMC const& tracks)
   {
     // MC rec.
     //Printf("MC Candidates: %d", candidates.size());
@@ -183,7 +181,7 @@ struct TaskXMC {
         registry.fill(HIST("hPtGenProng1"), ptProngs[1]);
         registry.fill(HIST("hPtGenProng2"), ptProngs[2]);
       }
-    } //gen
+    } // gen
   }   // process
 };    // struct
 
