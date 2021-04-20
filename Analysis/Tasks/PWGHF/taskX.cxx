@@ -122,7 +122,8 @@ struct TaskXMC {
   // Filter filterSelectCandidates = (aod::hf_selcandidate_x::isSelXToJpsiPiPi >= selectionFlagX);
 
   void process(soa::Join<aod::HfCandX, aod::HfCandXMCRec> const& candidates,
-               soa::Join<aod::McParticles, aod::HfCandXMCGen> const& particlesMC)
+               soa::Join<aod::McParticles, aod::HfCandXMCGen> const& particlesMC,
+               aod::BigTracksMC) // aod::BigTracksMC is needed to get corresponding MC particle in MC rec. part
   {
     // MC rec.
     //Printf("MC Candidates: %d", candidates.size());
@@ -135,9 +136,9 @@ struct TaskXMC {
       }
       if (candidate.flagMCMatchRec() == 1 << XToJpsiPiPi) {
         // Get the corresponding MC particle. // TODO: fix the next 3 lines, gives very strange error
-        // auto indexMother = RecoDecay::getMother(particlesMC, candidate.index1_as<aod::BigTracksMC>().mcParticle_as<soa::Join<aod::McParticles, aod::HfCandXMCGen>>(), 9920443, true);
-        // auto particleMother = particlesMC.iteratorAt(indexMother);
-        // registry.fill(HIST("hPtGenSig"), particleMother.pt());
+        auto indexMother = RecoDecay::getMother(particlesMC, candidate.index1_as<aod::BigTracksMC>().mcParticle_as<soa::Join<aod::McParticles, aod::HfCandXMCGen>>(), 9920443, true);
+        auto particleMother = particlesMC.iteratorAt(indexMother);
+        registry.fill(HIST("hPtGenSig"), particleMother.pt());
         registry.fill(HIST("hPtRecSig"), candidate.pt());
         registry.fill(HIST("hCPARecSig"), candidate.cpa());
         registry.fill(HIST("hEtaRecSig"), candidate.eta());
