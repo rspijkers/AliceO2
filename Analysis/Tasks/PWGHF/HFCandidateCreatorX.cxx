@@ -182,7 +182,7 @@ struct HFCandidateCreatorX {
           auto errorDecayLength = std::sqrt(getRotatedCovMatrixXX(covMatrixPV, phi, theta) + getRotatedCovMatrixXX(covMatrixPCA, phi, theta));
           auto errorDecayLengthXY = std::sqrt(getRotatedCovMatrixXX(covMatrixPV, phi, 0.) + getRotatedCovMatrixXX(covMatrixPCA, phi, 0.));
 
-          int hfFlagTemp = 1; // TODO: do something with bitmaps? this is set to 1 for now, since X has only one decay channel implemented
+          int hfFlag = 1 << XToJpsiPiPi;
 
           // fill the candidate table for the X here:
           rowCandidateBase(collision.globalIndex(),
@@ -196,7 +196,7 @@ struct HFCandidateCreatorX {
                            impactParameter0.getY(), impactParameter1.getY(), impactParameter2.getY(),
                            std::sqrt(impactParameter0.getSigmaY2()), std::sqrt(impactParameter1.getSigmaY2()), std::sqrt(impactParameter2.getSigmaY2()),
                            jpsiCand.globalIndex(), trackPos.globalIndex(), trackNeg.globalIndex(),
-                           hfFlagTemp); // dont forget to implement an "hfflag"
+                           hfFlag);
 
           // calculate invariant mass
           auto arrayMomenta = array{pvecJpsi, pvecPos, pvecNeg};
