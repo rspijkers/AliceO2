@@ -16,6 +16,7 @@
 
 #include "Framework/AnalysisTask.h"
 #include "Framework/HistogramRegistry.h"
+#include "AnalysisCore/HFSelectorCuts.h"
 #include "AnalysisDataModel/HFSecondaryVertex.h"
 #include "AnalysisDataModel/HFCandidateSelectionTables.h"
 
@@ -42,11 +43,11 @@ struct TaskX {
      {"hPtProng0", "3-prong candidates;prong 0 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
      {"hPtProng1", "3-prong candidates;prong 1 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
      {"hPtProng2", "3-prong candidates;prong 1 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
-     {"hdeclength", "3-prong candidates;decay length (cm);entries", {HistType::kTH1F, {{200, 0., 2.}}}},
-     {"hdeclengthxy", "3-prong candidates;decay length xy (cm);entries", {HistType::kTH1F, {{200, 0., 2.}}}},
-     {"hd0Prong0", "3-prong candidates;prong 0 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -1., 1.}}}},
-     {"hd0Prong1", "3-prong candidates;prong 1 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -1., 1.}}}},
-     {"hd0Prong2", "3-prong candidates;prong 1 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -1., 1.}}}},
+     {"hdeclength", "3-prong candidates;decay length (cm);entries", {HistType::kTH1F, {{200, 0., 0.4}}}},
+     {"hdeclengthxy", "3-prong candidates;decay length xy (cm);entries", {HistType::kTH1F, {{200, 0., 0.4}}}},
+     {"hd0Prong0", "3-prong candidates;prong 0 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -0.05, 0.05}}}},
+     {"hd0Prong1", "3-prong candidates;prong 1 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -0.05, 0.05}}}},
+     {"hd0Prong2", "3-prong candidates;prong 1 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -0.05, 0.05}}}},
      {"hCPA", "3-prong candidates;cosine of pointing angle;entries", {HistType::kTH1F, {{110, -1.1, 1.1}}}},
      {"hEta", "3-prong candidates;candidate #it{#eta};entries", {HistType::kTH1F, {{100, -2., 2.}}}},
      {"hImpParErr", "3-prong candidates;impact parameter error (cm);entries", {HistType::kTH1F, {{100, -1., 1.}}}},
@@ -59,7 +60,7 @@ struct TaskX {
 
   Filter filterSelectCandidates = (aod::hf_selcandidate_x::isSelXToJpsiPiPi >= selectionFlagX);
 
-  void process(soa::Filtered<soa::Join<aod::HfCandX, aod::hfSelXToJpsiPiPiCandidate>> const& candidates)
+  void process(soa::Filtered<soa::Join<aod::HfCandX, aod::HFSelXToJpsiPiPiCandidate>> const& candidates)
   {
     for (auto& candidate : candidates) {
       if (!(candidate.hfflag() & 1 << XToJpsiPiPi)) {
@@ -105,16 +106,16 @@ struct TaskXMC {
      {"hPtGenProng0", "3-prong candidates (gen. matched);prong 0 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
      {"hPtGenProng1", "3-prong candidates (gen. matched);prong 1 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
      {"hPtGenProng2", "3-prong candidates (gen. matched);prong 2 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
-     {"hMassRecSig", "3-prong candidates (rec. matched);inv. mass (J/#psi #pi+ #pi-) (GeV/#it{c}^{2});entries", {HistType::kTH1F, {{500, 0., 10.}}}},
+     {"hMassRecSig", "3-prong candidates (rec. matched);inv. mass (J/#psi #pi+ #pi-) (GeV/#it{c}^{2});entries", {HistType::kTH1F, {{500, 3.7, 4.}}}},
      {"hMassRecBg", "3-prong candidates (rec. unmatched);inv. mass (J/#psi #pi+ #pi-) (GeV/#it{c}^{2});entries", {HistType::kTH1F, {{500, 0., 10.}}}},
-     {"hd0Prong0RecSig", "3-prong candidates (rec. matched);prong 0 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -1., 1.}}}},
-     {"hd0Prong1RecSig", "3-prong candidates (rec. matched);prong 1 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -1., 1.}}}},
-     {"hd0Prong2RecSig", "3-prong candidates (rec. matched);prong 2 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -1., 1.}}}},
-     {"hd0Prong0RecBg", "3-prong candidates (rec. unmatched);prong 0 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -1., 1.}}}},
-     {"hd0Prong1RecBg", "3-prong candidates (rec. unmatched);prong 1 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -1., 1.}}}},
-     {"hd0Prong2RecBg", "3-prong candidates (rec. unmatched);prong 2 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -1., 1.}}}},
-     {"hDeclengthRecSig", "3-prong candidates (rec. matched);decay length (cm);entries", {HistType::kTH1F, {{200, 0., 2.}}}},
-     {"hDeclengthRecBg", "3-prong candidates (rec. unmatched);decay length (cm);entries", {HistType::kTH1F, {{200, 0., 2.}}}}}};
+     {"hd0Prong0RecSig", "3-prong candidates (rec. matched);prong 0 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -0.05, 0.05}}}},
+     {"hd0Prong1RecSig", "3-prong candidates (rec. matched);prong 1 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -0.05, 0.05}}}},
+     {"hd0Prong2RecSig", "3-prong candidates (rec. matched);prong 2 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -0.05, 0.05}}}},
+     {"hd0Prong0RecBg", "3-prong candidates (rec. unmatched);prong 0 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -0.05, 0.05}}}},
+     {"hd0Prong1RecBg", "3-prong candidates (rec. unmatched);prong 1 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -0.05, 0.05}}}},
+     {"hd0Prong2RecBg", "3-prong candidates (rec. unmatched);prong 2 DCAxy to prim. vertex (cm);entries", {HistType::kTH1F, {{100, -0.05, 0.05}}}},
+     {"hDeclengthRecSig", "3-prong candidates (rec. matched);decay length (cm);entries", {HistType::kTH1F, {{200, 0., 0.4}}}},
+     {"hDeclengthRecBg", "3-prong candidates (rec. unmatched);decay length (cm);entries", {HistType::kTH1F, {{200, 0., 0.4}}}}}};
 
   Configurable<int> selectionFlagX{"selectionFlagX", 1, "Selection Flag for X"};
   Configurable<double> cutYCandMax{"cutYCandMax", -1., "max. cand. rapidity"};

@@ -48,9 +48,12 @@ struct HFXToJpsiPiPiCandidateSelector {
 
   Configurable<double> d_pidTPCMinpT{"d_pidTPCMinpT", 0.15, "Lower bound of track pT for TPC PID"};
   Configurable<double> d_pidTPCMaxpT{"d_pidTPCMaxpT", 10., "Upper bound of track pT for TPC PID"};
+  Configurable<double> d_pidTOFMinpT{"d_pidTOFMinpT", 0.15, "Lower bound of track pT for TOF PID"};
+  Configurable<double> d_pidTOFMaxpT{"d_pidTOFMaxpT", 10., "Upper bound of track pT for TOF PID"};
 
   Configurable<double> d_TPCNClsFindablePIDCut{"d_TPCNClsFindablePIDCut", 70., "Lower bound of TPC findable clusters for good PID"};
   Configurable<double> d_nSigmaTPC{"d_nSigmaTPC", 3., "Nsigma cut on TPC only"};
+  Configurable<double> d_nSigmaTOF{"d_nSigmaTOF", 3., "Nsigma cut on TOF only"};
 
   /// Gets corresponding pT bin from cut file array
   /// \param candpT is the pT of the candidate
@@ -92,28 +95,44 @@ struct HFXToJpsiPiPiCandidateSelector {
     auto candpT = hfCandX.pt();
     int pTBin = getpTBin(candpT);
     if (pTBin == -1) {
+      Printf("X topol selection failed at getpTBin");
       return false;
     }
 
     if (candpT < d_pTCandMin || candpT >= d_pTCandMax) {
+      Printf("X topol selection failed at cand pT check");
       return false; //check that the candidate pT is within the analysis range
     }
 
     // TODO: replace hardcoded mass with "RecoDecay::getMassPDG(9920443)"
-    if (TMath::Abs(InvMassXToJpsiPiPi(hfCandX) - 3872.) > cuts[pTBin][0]) {
+    if (TMath::Abs(InvMassXToJpsiPiPi(hfCandX) - 3.87168) > cuts[pTBin][0]) {
+      Printf("X topol selection failed at mass diff check");
       return false; //check that mass difference is within bounds
     }
 
     if ((hfCandJpsi.pt() < cuts[pTBin][3]) || (trackNeg.pt() < cuts[pTBin][4]) || (trackPos.pt() < cuts[pTBin][4])) {
+      Printf("X topol selection failed at daughter pT check");
       return false; //cut on daughter pT
     }
-    // FIXME: dcaPrim0, dcaPrim1 are not defined???
-    if (TMath::Abs(trackNeg.dcaPrim0()) > cuts[pTBin][1] || TMath::Abs(trackNeg.dcaPrim0()) > cuts[pTBin][1] || TMath::Abs(trackPos.dcaPrim0()) > cuts[pTBin][1]) {
-      return false; //cut on daughter dca - need to add secondary vertex constraint here
+
+    if (TMath::Abs(hfCandX.cpa()) < 0.75) {
+      return false; // CPA check
     }
-    if (TMath::Abs(trackNeg.dcaPrim1()) > cuts[pTBin][2] || TMath::Abs(trackPos.dcaPrim1()) > cuts[pTBin][2]) {
-      return false; //cut on daughter dca - need to add secondary vertex constraint here
+
+    if (hfCandX.decayLength() >= 0.01) {
+      return false; // decayLength check
     }
+
+    // TODO: check higher statistics (with higher bin resolution) to see if these cuts can be tighter
+    if ((hfCandX.impactParameter0() > 0.02) || (hfCandX.impactParameter1() > 0.02) || (hfCandX.impactParameter2() > 0.02)) {
+      return false; // DCA check on daughters
+    }
+    // if (TMath::Abs(trackNeg.dcaPrim0()) > cuts[pTBin][1] || TMath::Abs(trackNeg.dcaPrim0()) > cuts[pTBin][1] || TMath::Abs(trackPos.dcaPrim0()) > cuts[pTBin][1]) {
+    //   return false; //cut on daughter dca - need to add secondary vertex constraint here
+    // }
+    // if (TMath::Abs(trackNeg.dcaPrim1()) > cuts[pTBin][2] || TMath::Abs(trackPos.dcaPrim1()) > cuts[pTBin][2]) {
+    //   return false; //cut on daughter dca - need to add secondary vertex constraint here
+    // }
 
     return true;
   }
@@ -132,28 +151,53 @@ struct HFXToJpsiPiPiCandidateSelector {
     return true;
   }
 
+  /// Check if track is ok for TOF PID
+  /// \param track is the track
+  /// \note function to be expanded
+  /// \return true if track is ok for TOF PID
+  template <typename T>
+  bool validTOFPID(const T& track)
+  {
+    if (TMath::Abs(track.pt()) < d_pidTOFMinpT || TMath::Abs(track.pt()) >= d_pidTOFMaxpT) {
+      return false;
+    }
+    return true;
+  }
+
   /// Check if track is compatible with given TPC Nsigma cut for the pion hypothesis
   /// \param track is the track
   /// \param nSigmaCut is the nsigma threshold to test against
-  /// \return true if track satisfies TPC PID hypothesis for given Nsigma cut
+  /// \return true if track satisfies TPC pion hypothesis for given Nsigma cut
   template <typename T>
   bool selectionPIDTPC(const T& track, int nSigmaCut)
   {
     if (nSigmaCut > 999.) {
       return true;
     }
-    return track.tpcNSigmaEl() < nSigmaCut;
+    return track.tpcNSigmaPi() < nSigmaCut;
   }
+
+  /// Check if track is compatible with given TOF NSigma cut for the pion hypothesis
+  /// \param track is the track
+  /// \param nSigmaCut is the nSigma threshold to test against
+  /// \return true if track satisfies TOF pion hypothesis for given NSigma cut
+  template <typename T>
+  bool selectionPIDTOF(const T& track, double nSigmaCut)
+  {
+    if (nSigmaCut > 999.) {
+      return true;
+    }
+    return track.tofNSigmaPi() < nSigmaCut;
+  }
+
   /// PID selection on daughter track
   /// \param track is the daughter track
   /// \return 1 if successful PID match, 0 if successful PID rejection, -1 if no PID info
   template <typename T>
   int selectionPID(const T& track)
-  {
-
-    if (validTPCPID(track)) {
-      if (!selectionPIDTPC(track, d_nSigmaTPC)) {
-
+  { // use both TPC and TOF here; in run5 only TOF makes sense. add some flag for run3/run5 data later?
+    if (validTOFPID(track)) {
+      if (!selectionPIDTOF(track, d_nSigmaTOF)) {
         return 0; //rejected by PID
       } else {
         return 1; //positive PID
@@ -161,8 +205,19 @@ struct HFXToJpsiPiPiCandidateSelector {
     } else {
       return -1; //no PID info
     }
+
+    // no tpc in run5, so for now comment it out
+    // if (validTPCPID(track)) {
+    //   if (!selectionPIDTPC(track, d_nSigmaTPC)) {
+    //     return 0; //rejected by PID
+    //   } else {
+    //     return 1; //positive PID
+    //   }
+    // } else {
+    //   return -1; //no PID info
+    // }
   }
-  void process(aod::hfCandX const& hfCandXs, aod::BigTracksPID const& tracks)
+  void process(aod::HfCandX const& hfCandXs, aod::HfCandProng2, aod::BigTracksPID const& tracks)
   {
     for (auto& hfCandX : hfCandXs) { //looping over X candidates
       // note the difference between Jpsi (index0) and pions (index1,2)
@@ -173,29 +228,34 @@ struct HFXToJpsiPiPiCandidateSelector {
       // check if flagged as X --> Jpsi Pi Pi
       if (!(hfCandX.hfflag() & 1 << XToJpsiPiPi)) {
         hfSelXToJpsiPiPiCandidate(0);
+        Printf("X candidate selection failed at hfflag check");
         continue;
       }
 
       // daughter track validity selection
       if (!daughterSelection(trackPos) || !daughterSelection(trackNeg)) {
         hfSelXToJpsiPiPiCandidate(0);
+        Printf("X candidate selection failed at daughter selection");
         continue;
       }
 
       //implement filter bit 4 cut - should be done before this task at the track selection level
       //need to add special cuts (additional cuts on decay length and d0 norm)
 
-      if (!selectionTopol(hfCandX, trackPos, trackNeg)) {
+      if (!selectionTopol(hfCandX, candJpsi, trackPos, trackNeg)) {
         hfSelXToJpsiPiPiCandidate(0);
+        Printf("X candidate selection failed at selection topology");
         continue;
       }
 
       if (selectionPID(trackPos) == 0 || selectionPID(trackNeg) == 0) {
         hfSelXToJpsiPiPiCandidate(0);
+        Printf("X candidate selection failed at selection PID");
         continue;
       }
 
       hfSelXToJpsiPiPiCandidate(1);
+      Printf("X candidate selection successful, candidate should be selected");
     }
   }
 };
