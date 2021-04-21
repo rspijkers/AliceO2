@@ -555,13 +555,13 @@ DECLARE_SOA_EXTENDED_TABLE_USER(HfCandProng3Ext, HfCandProng3Base, "HFCANDP3EXT"
 using HfCandProng3 = HfCandProng3Ext;
 
 // table with results of reconstruction level MC matching
-DECLARE_SOA_TABLE(HfCandProng3MCRec, "AOD", "HFCANDP3MCREC",
+DECLARE_SOA_TABLE(HfCandProng3MCRec, "AOD", "HFCANDP3MCREC", //!
                   hf_cand_prong3::FlagMCMatchRec,
                   hf_cand_prong3::OriginMCRec,
                   hf_cand_prong3::FlagMCDecayChanRec);
 
 // table with results of generator level MC matching
-DECLARE_SOA_TABLE(HfCandProng3MCGen, "AOD", "HFCANDP3MCGEN",
+DECLARE_SOA_TABLE(HfCandProng3MCGen, "AOD", "HFCANDP3MCGEN", //!
                   hf_cand_prong3::FlagMCMatchGen,
                   hf_cand_prong3::OriginMCGen,
                   hf_cand_prong3::FlagMCDecayChanGen);
@@ -624,13 +624,13 @@ DECLARE_SOA_EXTENDED_TABLE_USER(HfCandXExt, HfCandXBase, "HFCANDXEXT",
 using HfCandX = HfCandXExt;
 
 // table with results of reconstruction level MC matching
-DECLARE_SOA_TABLE(HfCandXMCRec, "AOD", "HFCANDXMCREC",
+DECLARE_SOA_TABLE(HfCandXMCRec, "AOD", "HFCANDXMCREC", //!
                   hf_cand_x::FlagMCMatchRec,
                   hf_cand_x::OriginMCRec,
                   hf_cand_x::FlagMCDecayChanRec);
 
 // table with results of generator level MC matching
-DECLARE_SOA_TABLE(HfCandXMCGen, "AOD", "HFCANDXMCGEN",
+DECLARE_SOA_TABLE(HfCandXMCGen, "AOD", "HFCANDXMCGEN", //!
                   hf_cand_x::FlagMCMatchGen,
                   hf_cand_x::OriginMCGen,
                   hf_cand_x::FlagMCDecayChanGen);
