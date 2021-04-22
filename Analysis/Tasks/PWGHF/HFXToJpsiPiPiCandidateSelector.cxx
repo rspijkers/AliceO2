@@ -119,12 +119,12 @@ struct HFXToJpsiPiPiCandidateSelector {
       return false; // CPA check
     }
 
-    if (hfCandX.decayLength() >= 0.01) {
-      return false; // decayLength check
-    }
+    // if (hfCandX.decayLength() >= 0.01) {
+    //   return false; // decayLength check
+    // }
 
     // TODO: check higher statistics (with higher bin resolution) to see if these cuts can be tighter
-    if ((hfCandX.impactParameter0() > 0.02) || (hfCandX.impactParameter1() > 0.02) || (hfCandX.impactParameter2() > 0.02)) {
+    if ((TMath::Abs(hfCandX.impactParameter0()) > 0.001) || (TMath::Abs(hfCandX.impactParameter1()) > 0.002) || (TMath::Abs(hfCandX.impactParameter2()) > 0.002)) {
       return false; // DCA check on daughters
     }
     // if (TMath::Abs(trackNeg.dcaPrim0()) > cuts[pTBin][1] || TMath::Abs(trackNeg.dcaPrim0()) > cuts[pTBin][1] || TMath::Abs(trackPos.dcaPrim0()) > cuts[pTBin][1]) {
