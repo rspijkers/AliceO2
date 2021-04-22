@@ -95,23 +95,23 @@ struct HFXToJpsiPiPiCandidateSelector {
     auto candpT = hfCandX.pt();
     int pTBin = getpTBin(candpT);
     if (pTBin == -1) {
-      Printf("X topol selection failed at getpTBin");
+      // Printf("X topol selection failed at getpTBin");
       return false;
     }
 
     if (candpT < d_pTCandMin || candpT >= d_pTCandMax) {
-      Printf("X topol selection failed at cand pT check");
+      // Printf("X topol selection failed at cand pT check");
       return false; //check that the candidate pT is within the analysis range
     }
 
     // TODO: replace hardcoded mass with "RecoDecay::getMassPDG(9920443)"
     if (TMath::Abs(InvMassXToJpsiPiPi(hfCandX) - 3.87168) > cuts[pTBin][0]) {
-      Printf("X topol selection failed at mass diff check");
+      // Printf("X topol selection failed at mass diff check");
       return false; //check that mass difference is within bounds
     }
 
     if ((hfCandJpsi.pt() < cuts[pTBin][3]) || (trackNeg.pt() < cuts[pTBin][4]) || (trackPos.pt() < cuts[pTBin][4])) {
-      Printf("X topol selection failed at daughter pT check");
+      // Printf("X topol selection failed at daughter pT check");
       return false; //cut on daughter pT
     }
 
@@ -119,6 +119,7 @@ struct HFXToJpsiPiPiCandidateSelector {
       return false; // CPA check
     }
 
+    // Decaylength cut is unneccesary I think, so I have commented it out for now
     // if (hfCandX.decayLength() >= 0.01) {
     //   return false; // decayLength check
     // }
@@ -127,12 +128,6 @@ struct HFXToJpsiPiPiCandidateSelector {
     if ((TMath::Abs(hfCandX.impactParameter0()) > 0.001) || (TMath::Abs(hfCandX.impactParameter1()) > 0.002) || (TMath::Abs(hfCandX.impactParameter2()) > 0.002)) {
       return false; // DCA check on daughters
     }
-    // if (TMath::Abs(trackNeg.dcaPrim0()) > cuts[pTBin][1] || TMath::Abs(trackNeg.dcaPrim0()) > cuts[pTBin][1] || TMath::Abs(trackPos.dcaPrim0()) > cuts[pTBin][1]) {
-    //   return false; //cut on daughter dca - need to add secondary vertex constraint here
-    // }
-    // if (TMath::Abs(trackNeg.dcaPrim1()) > cuts[pTBin][2] || TMath::Abs(trackPos.dcaPrim1()) > cuts[pTBin][2]) {
-    //   return false; //cut on daughter dca - need to add secondary vertex constraint here
-    // }
 
     return true;
   }
@@ -228,14 +223,14 @@ struct HFXToJpsiPiPiCandidateSelector {
       // check if flagged as X --> Jpsi Pi Pi
       if (!(hfCandX.hfflag() & 1 << XToJpsiPiPi)) {
         hfSelXToJpsiPiPiCandidate(0);
-        Printf("X candidate selection failed at hfflag check");
+        // Printf("X candidate selection failed at hfflag check");
         continue;
       }
 
       // daughter track validity selection
       if (!daughterSelection(trackPos) || !daughterSelection(trackNeg)) {
         hfSelXToJpsiPiPiCandidate(0);
-        Printf("X candidate selection failed at daughter selection");
+        // Printf("X candidate selection failed at daughter selection");
         continue;
       }
 
@@ -244,18 +239,18 @@ struct HFXToJpsiPiPiCandidateSelector {
 
       if (!selectionTopol(hfCandX, candJpsi, trackPos, trackNeg)) {
         hfSelXToJpsiPiPiCandidate(0);
-        Printf("X candidate selection failed at selection topology");
+        // Printf("X candidate selection failed at selection topology");
         continue;
       }
 
       if (selectionPID(trackPos) == 0 || selectionPID(trackNeg) == 0) {
         hfSelXToJpsiPiPiCandidate(0);
-        Printf("X candidate selection failed at selection PID");
+        // Printf("X candidate selection failed at selection PID");
         continue;
       }
 
       hfSelXToJpsiPiPiCandidate(1);
-      Printf("X candidate selection successful, candidate should be selected");
+      // Printf("X candidate selection successful, candidate should be selected");
     }
   }
 };
