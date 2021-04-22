@@ -103,6 +103,13 @@ struct TaskXMC {
      {"hEtaRecBg", "3-prong candidates (rec. unmatched);#it{#eta};entries", {HistType::kTH1F, {{100, -2., 2.}}}},
      {"hEtaGen", "3-prong candidates (gen. matched);#it{#eta};entries", {HistType::kTH1F, {{100, -2., 2.}}}},
 
+     {"hPtProng0RecSig", "3-prong candidates (rec. matched);prong 0 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
+     {"hPtProng1RecSig", "3-prong candidates (rec. matched);prong 1 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
+     {"hPtProng2RecSig", "3-prong candidates (rec. matched);prong 2 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
+     {"hPtProng0RecBg", "3-prong candidates (rec. unmatched);prong 0 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
+     {"hPtProng1RecBg", "3-prong candidates (rec. unmatched);prong 1 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
+     {"hPtProng2RecBg", "3-prong candidates (rec. unmatched);prong 2 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
+
      {"hPtGenProng0", "3-prong candidates (gen. matched);prong 0 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
      {"hPtGenProng1", "3-prong candidates (gen. matched);prong 1 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
      {"hPtGenProng2", "3-prong candidates (gen. matched);prong 2 #it{p}_{T} (GeV/#it{c});entries", {HistType::kTH1F, {{100, 0., 10.}}}},
@@ -134,7 +141,6 @@ struct TaskXMC {
         continue;
       }
       if (candidate.flagMCMatchRec() == 1 << XToJpsiPiPi) {
-        // Get the corresponding MC particle. // TODO: fix the next 3 lines, gives very strange error
         auto indexMother = RecoDecay::getMother(particlesMC, candidate.index1_as<aod::BigTracksMC>().mcParticle_as<soa::Join<aod::McParticles, aod::HfCandXMCGen>>(), 9920443, true);
         auto particleMother = particlesMC.iteratorAt(indexMother);
         registry.fill(HIST("hPtGenSig"), particleMother.pt());
@@ -147,6 +153,9 @@ struct TaskXMC {
         registry.fill(HIST("hd0Prong0RecSig"), candidate.impactParameter0());
         registry.fill(HIST("hd0Prong1RecSig"), candidate.impactParameter1());
         registry.fill(HIST("hd0Prong2RecSig"), candidate.impactParameter2());
+        registry.fill(HIST("hPtProng0RecSig"), candidate.ptProng0());
+        registry.fill(HIST("hPtProng1RecSig"), candidate.ptProng1());
+        registry.fill(HIST("hPtProng2RecSig"), candidate.ptProng2());
       } else {
         registry.fill(HIST("hPtRecBg"), candidate.pt());
         registry.fill(HIST("hCPARecBg"), candidate.cpa());
@@ -157,17 +166,20 @@ struct TaskXMC {
         registry.fill(HIST("hd0Prong0RecBg"), candidate.impactParameter0());
         registry.fill(HIST("hd0Prong1RecBg"), candidate.impactParameter1());
         registry.fill(HIST("hd0Prong2RecBg"), candidate.impactParameter2());
+        registry.fill(HIST("hPtProng0RecBg"), candidate.ptProng0());
+        registry.fill(HIST("hPtProng1RecBg"), candidate.ptProng1());
+        registry.fill(HIST("hPtProng2RecBg"), candidate.ptProng2());
       }
     } // rec
     // MC gen.
     //Printf("MC Particles: %d", particlesMC.size());
     for (auto& particle : particlesMC) {
       if (particle.flagMCMatchGen() == 1 << XToJpsiPiPi) {
-        // TODO: add X(3872) mass such that we can use the getMassPDG function
-        // if (cutYCandMax >= 0. && std::abs(RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, RecoDecay::getMassPDG(particle.pdgCode()))) > cutYCandMax) {
-        //   Printf("MC Gen.: Y rejection: %g", RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, RecoDecay::getMassPDG(particle.pdgCode())));
-        //   continue;
-        // }
+        // TODO: add X(3872) mass such that we can use the getMassPDG function instead of hardcoded mass
+        if (cutYCandMax >= 0. && std::abs(RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, 3.87168)) > cutYCandMax) {
+          // Printf("MC Gen.: Y rejection: %g", RecoDecay::Y(array{particle.px(), particle.py(), particle.pz()}, 3.87168));
+          continue;
+        }
         registry.fill(HIST("hPtGen"), particle.pt());
         registry.fill(HIST("hEtaGen"), particle.eta());
 
