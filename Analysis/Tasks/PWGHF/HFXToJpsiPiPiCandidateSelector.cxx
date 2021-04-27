@@ -22,21 +22,7 @@ using namespace o2;
 using namespace o2::framework;
 using namespace o2::aod::hf_cand_x;
 using namespace o2::analysis;
-
-static const int npTBins = 9;
-static const int nCutVars = 5;
-//TODO: move this to namespace o2::analysis::hf_cuts_jpsi_toee, like done with the Jpsi selector
-//    mass  dcaxy dcaz pt_jpsi pt_pi
-constexpr double cuts[npTBins][nCutVars] =
-  {{0.5, 0.2, 0.4, 1, 0},  /* pt<0.5   */
-   {0.5, 0.2, 0.4, 1, 0},  /* 0.5<pt<1 */
-   {0.5, 0.2, 0.4, 1, 0},  /* 1<pt<2   */
-   {0.5, 0.2, 0.4, 1, 0},  /* 2<pt<3   */
-   {0.5, 0.2, 0.4, 1, 0},  /* 3<pt<4   */
-   {0.5, 0.2, 0.4, 1, 0},  /* 4<pt<5   */
-   {0.5, 0.2, 0.4, 1, 0},  /* 5<pt<7   */
-   {0.5, 0.2, 0.4, 1, 0},  /* 7<pt<10  */
-   {0.5, 0.2, 0.4, 1, 0}}; /* 10<pt<15 */
+using namespace o2::analysis::hf_cuts_x_tojpsipipi;
 
 /// Struct for applying Jpsi selection cuts
 struct HFXToJpsiPiPiCandidateSelector {
@@ -55,23 +41,8 @@ struct HFXToJpsiPiPiCandidateSelector {
   Configurable<double> d_nSigmaTPC{"d_nSigmaTPC", 3., "Nsigma cut on TPC only"};
   Configurable<double> d_nSigmaTOF{"d_nSigmaTOF", 3., "Nsigma cut on TOF only"};
 
-  /// Gets corresponding pT bin from cut file array
-  /// \param candpT is the pT of the candidate
-  /// \return corresponding bin number of array
-  template <typename T>
-  int getpTBin(T candpT)
-  {
-    double pTBins[npTBins + 1] = {0, 0.5, 1., 2., 3., 4., 5., 7., 10., 15.};
-    if (candpT < pTBins[0] || candpT >= pTBins[npTBins]) {
-      return -1;
-    }
-    for (int i = 0; i < npTBins; i++) {
-      if (candpT < pTBins[i + 1]) {
-        return i;
-      }
-    }
-    return -1;
-  }
+  Configurable<std::vector<double>> pTBins{"pTBins", std::vector<double>{hf_cuts_x_tojpsipipi::pTBins_v}, "pT bin limits"};
+  Configurable<LabeledArray<double>> cuts{"X_to_jpsipipi_cuts", {hf_cuts_x_tojpsipipi::cuts[0], npTBins, nCutVars, pTBinLabels, cutVarLabels}, "Jpsi candidate selection per pT bin"};
 
   /// Selection on goodness of daughter tracks
   /// \note should be applied at candidate selection
@@ -93,7 +64,7 @@ struct HFXToJpsiPiPiCandidateSelector {
   bool selectionTopol(const T1& hfCandX, const T2& hfCandJpsi, const T3& trackPos, const T3& trackNeg)
   {
     auto candpT = hfCandX.pt();
-    int pTBin = getpTBin(candpT);
+    int pTBin = findBin(pTBins, candpT);
     if (pTBin == -1) {
       // Printf("X topol selection failed at getpTBin");
       return false;
@@ -105,29 +76,27 @@ struct HFXToJpsiPiPiCandidateSelector {
     }
 
     // TODO: replace hardcoded mass with "RecoDecay::getMassPDG(9920443)"
-    if (TMath::Abs(InvMassXToJpsiPiPi(hfCandX) - 3.87168) > cuts[pTBin][0]) {
+    if (TMath::Abs(InvMassXToJpsiPiPi(hfCandX) - 3.87168) > cuts->get(pTBin, "m")) {
       // Printf("X topol selection failed at mass diff check");
       return false; //check that mass difference is within bounds
     }
 
-    if ((hfCandJpsi.pt() < cuts[pTBin][3]) || (trackNeg.pt() < cuts[pTBin][4]) || (trackPos.pt() < cuts[pTBin][4])) {
+    if ((hfCandJpsi.pt() < cuts->get(pTBin, "pT Jpsi")) || (trackNeg.pt() < cuts->get(pTBin, "pT Pi")) || (trackPos.pt() < cuts->get(pTBin, "pT Pi"))) {
       // Printf("X topol selection failed at daughter pT check");
       return false; //cut on daughter pT
     }
 
-    if (TMath::Abs(hfCandX.cpa()) < 0.75) {
+    if (TMath::Abs(hfCandX.cpa()) < cuts->get(pTBin, "CPA")) {
       return false; // CPA check
     }
 
-    // Decaylength cut is unneccesary I think, so I have commented it out for now
-    // if (hfCandX.decayLength() >= 0.01) {
-    //   return false; // decayLength check
-    // }
-
-    // TODO: check higher statistics (with higher bin resolution) to see if these cuts can be tighter
-    if ((TMath::Abs(hfCandX.impactParameter0()) > 0.001) || (TMath::Abs(hfCandX.impactParameter1()) > 0.002) || (TMath::Abs(hfCandX.impactParameter2()) > 0.002)) {
+    if ((TMath::Abs(hfCandX.impactParameter0()) > cuts->get(pTBin, "d0 Jpsi")) ||
+        (TMath::Abs(hfCandX.impactParameter1()) > cuts->get(pTBin, "d0 Pi")) ||
+        (TMath::Abs(hfCandX.impactParameter2()) > cuts->get(pTBin, "d0 Pi"))) {
       return false; // DCA check on daughters
     }
+
+    // add more cuts: d0 product? PCA?
 
     return true;
   }
