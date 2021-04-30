@@ -86,7 +86,7 @@ struct HFXToJpsiPiPiCandidateSelector {
       return false; //cut on daughter pT
     }
 
-    if (TMath::Abs(hfCandX.cpa()) < cuts->get(pTBin, "CPA")) {
+    if (hfCandX.cpa() < cuts->get(pTBin, "CPA")) {
       return false; // CPA check
     }
 
