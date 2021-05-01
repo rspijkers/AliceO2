@@ -181,6 +181,7 @@ struct HFXToJpsiPiPiCandidateSelector {
     //   return -1; //no PID info
     // }
   }
+
   void process(aod::HfCandX const& hfCandXs, aod::HfCandProng2, aod::BigTracksPID const& tracks)
   {
     for (auto& hfCandX : hfCandXs) { //looping over X candidates
