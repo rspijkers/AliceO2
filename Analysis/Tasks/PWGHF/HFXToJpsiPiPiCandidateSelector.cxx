@@ -186,7 +186,7 @@ struct HFXToJpsiPiPiCandidateSelector {
   {
     for (auto& hfCandX : hfCandXs) { //looping over X candidates
       // note the difference between Jpsi (index0) and pions (index1,2)
-      auto candJpsi = hfCandX.index0(); // not a track
+      auto candJpsi = hfCandX.index0();                       // not a track
       auto trackPos = hfCandX.index1_as<aod::BigTracksPID>(); //positive daughter
       auto trackNeg = hfCandX.index2_as<aod::BigTracksPID>(); //negative daughter
 
