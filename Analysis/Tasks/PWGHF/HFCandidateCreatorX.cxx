@@ -57,6 +57,13 @@ struct HFCandidateCreatorX {
   OutputObj<TH1F> hCovPVXX{TH1F("hCovPVXX", "3-prong candidates;XX element of cov. matrix of prim. vtx position (cm^{2});entries", 100, 0., 1.e-4)};
   OutputObj<TH1F> hCovSVXX{TH1F("hCovSVXX", "3-prong candidates;XX element of cov. matrix of sec. vtx position (cm^{2});entries", 100, 0., 0.2)};
 
+  OutputObj<TH1F> hDeltaPhiPos{TH1F("hDeltaPhiPos", "delta #phi #pi+ and J/#psi;entries", 100, 0., 6.3)};
+  OutputObj<TH1F> hDeltaPhiNeg{TH1F("hDeltaPhiNeg", "delta #phi #pi- and J/#psi;entries", 100, 0., 6.3)};
+  OutputObj<TH1F> hDeltaEtaPos{TH1F("hDeltaEtaPos", "delta #eta #pi+ and J/#psi;entries", 100, -8., 8.)};
+  OutputObj<TH1F> hDeltaEtaNeg{TH1F("hDeltaEtaNeg", "delta #eta #pi- and J/#psi;entries", 100, -8., 8.)};
+  OutputObj<TH1F> hDeltaRPos{TH1F("hDeltaRPos", "delta R #pi+ and J/#psi;entries", 100, 0., 10.)};
+  OutputObj<TH1F> hDeltaRNeg{TH1F("hDeltaRNeg", "delta R #pi- and J/#psi;entries", 100, 0., 10.)};
+
   double massPi = RecoDecay::getMassPDG(kPiPlus);
   double massJpsi = RecoDecay::getMassPDG(443);
   double massJpsiPiPi;
@@ -125,6 +132,9 @@ struct HFCandidateCreatorX {
       int index0Jpsi = jpsiCand.index0Id();
       int index1Jpsi = jpsiCand.index1Id();
 
+      auto etaJpsi = jpsiCand.eta();
+      auto phiJpsi = jpsiCand.phi();
+
       // loop over pi+ candidates
       for (auto& trackPos : tracks) {
         if (trackPos.sign() < 0) { // select only positive tracks - use partitions?
@@ -134,6 +144,17 @@ struct HFCandidateCreatorX {
           continue;
         }
 
+        auto etaTrackPos = trackPos.eta();
+        auto phiTrackPos = trackPos.phi();
+
+        auto deltaEtaPos = etaJpsi - etaTrackPos;
+        auto deltaPhiPos = phiJpsi - phiTrackPos;
+        auto deltaRPos = RecoDecay::sqrtSumOfSquares(deltaEtaPos, deltaPhiPos);
+
+        hDeltaPhiPos->Fill(deltaPhiPos);
+        hDeltaEtaPos->Fill(deltaEtaPos);
+        hDeltaRPos->Fill(deltaRPos);
+
         // loop over pi- candidates
         for (auto& trackNeg : tracks) {
           if (trackNeg.sign() > 0) { // select only negative tracks - use partitions?
@@ -142,6 +163,17 @@ struct HFCandidateCreatorX {
           if (trackNeg.globalIndex() == index1Jpsi) {
             continue;
           }
+
+          auto etaTrackNeg = trackNeg.eta();
+          auto phiTrackNeg = trackNeg.phi();
+
+          auto deltaEtaNeg = etaJpsi - etaTrackNeg;
+          auto deltaPhiNeg = phiJpsi - phiTrackNeg;
+          auto deltaRNeg = RecoDecay::sqrtSumOfSquares(deltaEtaNeg, deltaPhiNeg);
+
+          hDeltaPhiNeg->Fill(deltaPhiNeg);
+          hDeltaEtaNeg->Fill(deltaEtaNeg);
+          hDeltaRNeg->Fill(deltaRNeg);
 
           auto trackParVarPos = getTrackParCov(trackPos);
           auto trackParVarNeg = getTrackParCov(trackNeg);
