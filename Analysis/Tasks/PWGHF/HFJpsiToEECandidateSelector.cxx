@@ -178,7 +178,7 @@ struct HFJpsiToEECandidateSelector {
       // implement filter bit 4 cut - should be done before this task at the track selection level
       // need to add special cuts (additional cuts on decay length and d0 norm)
 
-      if (!selectionTopol(candidate, trackPos, trackNeg)) {
+      if (!selectionTopol(hfCandProng2, trackPos, trackNeg)) {
         hfSelJpsiToEECandidate(0);
         continue;
       }
